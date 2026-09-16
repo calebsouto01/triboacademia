@@ -9,10 +9,12 @@
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
 
-  // Fração do scroll da seção dedicada a cada fase.
-  var INTRO_END = 0.35; // peso termina de subir aqui (rápido)
-  var CROSS_START = 0.3; // hero começa a aparecer (com sobreposição)
-  var CROSS_END = 0.55; // hero totalmente visível
+  // Fração do scroll da seção dedicada a cada fase (seção agora é mais alta,
+  // então o peso continua subindo rápido em pixels, e sobra bastante scroll
+  // para uma transição lenta e suave até a hero).
+  var INTRO_END = 0.18; // peso termina de subir aqui (rápido)
+  var CROSS_START = 0.24; // hero começa a aparecer, depois da mensagem de sucesso
+  var CROSS_END = 0.75; // transição longa e suave até a hero assentar
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -40,16 +42,21 @@
     // Fase 2: transição (crossfade) da intro para a hero, como uma sessão única.
     var crossProgress = clamp((progress - CROSS_START) / (CROSS_END - CROSS_START), 0, 1);
 
+    // Suavização (ease-in-out) para o movimento não parecer linear/mecânico.
+    var eased = crossProgress * crossProgress * (3 - 2 * crossProgress);
+
     if (introLayer) {
-      introLayer.style.opacity = 1 - crossProgress;
-      introLayer.style.transform = "translateY(" + -(crossProgress * 30) + "px)";
-      introLayer.style.pointerEvents = crossProgress > 0.9 ? "none" : "auto";
+      introLayer.style.opacity = 1 - eased;
+      introLayer.style.transform =
+        "translateY(" + -(eased * 50) + "px) scale(" + (1 - eased * 0.08) + ")";
+      introLayer.style.pointerEvents = eased > 0.9 ? "none" : "auto";
     }
 
     if (heroLayer) {
-      heroLayer.style.opacity = crossProgress;
-      heroLayer.style.transform = "translateY(" + ((1 - crossProgress) * 30) + "px)";
-      heroLayer.style.pointerEvents = crossProgress > 0.1 ? "auto" : "none";
+      heroLayer.style.opacity = eased;
+      heroLayer.style.transform =
+        "translateY(" + ((1 - eased) * 50) + "px) scale(" + (0.94 + eased * 0.06) + ")";
+      heroLayer.style.pointerEvents = eased > 0.1 ? "auto" : "none";
     }
 
     // O restante do site só aparece (fica acessível) após a hero terminar de aparecer.
