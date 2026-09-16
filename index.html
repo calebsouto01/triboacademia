@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tribo Academia</title>
+  <meta name="description" content="Tribo Academia — treine com a gente e comece hoje o seu primeiro movimento rumo aos resultados." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== INTRO INTERATIVA ===================== -->
+  <div id="intro-overlay" class="intro-overlay">
+    <button id="skip-intro" class="skip-intro" type="button">Pular introdução</button>
+
+    <div class="intro-content">
+      <div class="intro-logo-placeholder">TRIBO ACADEMIA</div>
+      <p class="intro-step" id="intro-step-1">Faça seu primeiro movimento</p>
+
+      <div class="pulley">
+        <div class="pulley-track">
+          <div class="pulley-cable"></div>
+          <div
+            id="pulley-handle"
+            class="pulley-handle"
+            tabindex="0"
+            role="button"
+            aria-label="Puxe aqui para começar"
+          >
+            <span>Puxe aqui</span>
+          </div>
+        </div>
+        <div class="pulley-arrow" aria-hidden="true">&#8595;</div>
+      </div>
+
+      <p class="intro-success" id="intro-success">
+        Você fez seu primeiro movimento rumo aos resultados!
+      </p>
+    </div>
+  </div>
+
+  <!-- ===================== SITE PRINCIPAL ===================== -->
+  <div id="site" class="site" aria-hidden="true">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="container header-inner">
+        <div class="logo-placeholder">TRIBO ACADEMIA</div>
+        <nav class="nav">
+          <a href="#sobre">Sobre</a>
+          <a href="#planos">Planos</a>
+          <a href="#horarios">Horários</a>
+          <a href="#contato">Contato</a>
+        </nav>
+        <a href="#contato" class="btn btn-primary nav-cta">Matricule-se</a>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-image-placeholder">[FOTO DA FACHADA]</div>
+      <div class="container hero-content">
+        <h1>Sua jornada começa com um movimento.</h1>
+        <p>Estrutura completa, treinos para todos os níveis e uma equipe pronta pra te levar mais longe.</p>
+        <a href="#contato" class="btn btn-primary">Comece agora</a>
+      </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="section">
+      <div class="container">
+        <h2>Sobre a Tribo Academia</h2>
+        <p>
+          Somos mais que uma academia: somos uma tribo. Estrutura completa e moderna,
+          equipamentos de última geração e aulas coletivas para todos os níveis:
+          G.A.P, Ritbox, Dança e Funcional.
+        </p>
+        <div class="gallery">
+          <div class="gallery-item">[FOTO DA ÁREA DE MUSCULAÇÃO]</div>
+          <div class="gallery-item">[FOTO DO MEZANINO / FUNCIONAL]</div>
+          <div class="gallery-item">[FOTO DE UMA AULA COLETIVA]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planos -->
+    <section id="planos" class="section section-alt">
+      <div class="container">
+        <h2>Conheça Nossos Planos</h2>
+        <p class="section-hashtag">#VEM PARA TRIBO</p>
+        <div class="plans">
+          <div class="plan-card">
+            <h3>6x na semana</h3>
+            <p class="plan-price">R$ 85<span>/mês</span></p>
+          </div>
+          <div class="plan-card">
+            <h3>3x na semana</h3>
+            <p class="plan-price">R$ 75<span>/mês</span></p>
+          </div>
+          <div class="plan-card plan-card-highlight">
+            <h3>Plano Família</h3>
+            <p class="plan-price">R$ 80<span>/mês</span></p>
+            <p class="plan-note">A partir de 2 pessoas</p>
+          </div>
+          <div class="plan-card">
+            <h3>Horário Promocional</h3>
+            <p class="plan-price">R$ 65<span>/mês</span></p>
+            <p class="plan-note">Consultar horários</p>
+          </div>
+        </div>
+        <p class="section-note">Aulas coletivas inclusas: G.A.P, Ritbox, Dança, Funcional.</p>
+        <p class="section-center">
+          <a href="#contato" class="btn btn-primary">Quero me matricular</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Horários -->
+    <section id="horarios" class="section">
+      <div class="container">
+        <h2>Horários de Aulas</h2>
+        <p class="section-note">*Grade de exemplo — confirme os horários reais das aulas coletivas na recepção.</p>
+        <div class="table-wrap">
+          <table class="schedule">
+            <thead>
+              <tr>
+                <th>Modalidade</th>
+                <th>Segunda</th>
+                <th>Terça</th>
+                <th>Quarta</th>
+                <th>Quinta</th>
+                <th>Sexta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Musculação</td>
+                <td>06h–22h</td>
+                <td>06h–22h</td>
+                <td>06h–22h</td>
+                <td>06h–22h</td>
+                <td>06h–22h</td>
+              </tr>
+              <tr>
+                <td>Funcional</td>
+                <td>07h, 19h</td>
+                <td>—</td>
+                <td>07h, 19h</td>
+                <td>—</td>
+                <td>07h, 19h</td>
+              </tr>
+              <tr>
+                <td>G.A.P</td>
+                <td>—</td>
+                <td>18h</td>
+                <td>—</td>
+                <td>18h</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Ritbox</td>
+                <td>19h</td>
+                <td>—</td>
+                <td>19h</td>
+                <td>—</td>
+                <td>19h</td>
+              </tr>
+              <tr>
+                <td>Dança</td>
+                <td>—</td>
+                <td>20h</td>
+                <td>—</td>
+                <td>20h</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="section section-alt">
+      <div class="container contact-grid">
+        <div>
+          <h2>Contato</h2>
+          <p>Endereço: Rua Quito, 248 — próximo ao UNEX</p>
+          <p>Telefone / WhatsApp: (75) 98217-6868</p>
+          <p>Instagram: <a href="https://instagram.com/Tribo_academia2023" target="_blank" rel="noopener">@Tribo_academia2023</a></p>
+          <p>
+            <a href="https://wa.me/5575982176868" target="_blank" rel="noopener" class="btn btn-primary">
+              Falar no WhatsApp
+            </a>
+          </p>
+        </div>
+        <div class="map-placeholder">[MAPA — RUA QUITO, 248]</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <p>&copy; <span id="year"></span> Tribo Academia. Todos os direitos reservados.</p>
+        <div class="social-placeholder">
+          <a href="https://instagram.com/Tribo_academia2023" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Botão flutuante de WhatsApp -->
+  <a
+    href="https://wa.me/5575982176868"
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-float"
+    id="whatsapp-float"
+    aria-label="Falar no WhatsApp"
+    hidden
+  >
+    WhatsApp
+  </a>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
