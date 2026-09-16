@@ -9,38 +9,36 @@
 </head>
 <body>
 
-  <!-- ===================== INTRO INTERATIVA ===================== -->
-  <div id="intro-overlay" class="intro-overlay">
-    <button id="skip-intro" class="skip-intro" type="button">Pular introdução</button>
+  <!-- ===================== INTRO (ANIMAÇÃO POR SCROLL) ===================== -->
+  <section id="intro" class="intro-scroll">
+    <div class="intro-sticky">
+      <a href="#hero" class="skip-intro">Pular introdução</a>
 
-    <div class="intro-content">
-      <div class="intro-logo-placeholder">TRIBO ACADEMIA</div>
-      <p class="intro-step" id="intro-step-1">Faça seu primeiro movimento</p>
+      <div class="intro-content">
+        <div class="intro-logo-placeholder">TRIBO ACADEMIA</div>
+        <p class="intro-step">Role para baixo para começar</p>
 
-      <div class="pulley">
-        <div class="pulley-track">
-          <div class="pulley-cable"></div>
-          <div
-            id="pulley-handle"
-            class="pulley-handle"
-            tabindex="0"
-            role="button"
-            aria-label="Puxe aqui para começar"
-          >
-            <span>Puxe aqui</span>
+        <div class="pulley">
+          <div class="pulley-track">
+            <div class="pulley-cable"></div>
+            <div id="pulley-weight" class="pulley-weight" aria-hidden="true">
+              <span class="pulley-weight-line"></span>
+              <span class="pulley-weight-line"></span>
+              <span class="pulley-weight-line"></span>
+            </div>
           </div>
+          <div class="pulley-arrow" aria-hidden="true">&#8595;</div>
         </div>
-        <div class="pulley-arrow" aria-hidden="true">&#8595;</div>
-      </div>
 
-      <p class="intro-success" id="intro-success">
-        Você fez seu primeiro movimento rumo aos resultados!
-      </p>
+        <p class="intro-success" id="intro-success">
+          Você fez seu primeiro movimento rumo aos resultados!
+        </p>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- ===================== SITE PRINCIPAL ===================== -->
-  <div id="site" class="site" aria-hidden="true">
+  <div id="site" class="site">
 
     <!-- Header -->
     <header class="header">
@@ -57,7 +55,7 @@
     </header>
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" id="hero">
       <div class="container hero-inner">
         <div class="hero-content">
           <h1>Sua jornada começa com um movimento.</h1>
