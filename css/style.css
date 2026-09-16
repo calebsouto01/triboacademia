@@ -293,32 +293,40 @@ a {
 }
 
 .hero {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: 70vh;
+  background: var(--color-bg-alt);
+  padding: 60px 0;
 }
 
-.hero-image-placeholder {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.85)), #e8e8e8;
-  display: flex;
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr;
   align-items: center;
-  justify-content: center;
-  color: #8a8a8a;
-  font-weight: 700;
-  letter-spacing: 1px;
+  gap: 40px;
+}
+
+@media (min-width: 800px) {
+  .hero-inner {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 20px;
+  }
 }
 
 .hero-content {
-  position: relative;
-  padding-bottom: 60px;
-  max-width: 640px;
+  max-width: 560px;
 }
 
 .hero-content h1 {
   font-size: 2.4rem;
+}
+
+.hero-illustration {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-illustration svg {
+  width: 100%;
+  max-width: 360px;
 }
 
 .section {
