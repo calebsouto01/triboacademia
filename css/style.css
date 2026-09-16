@@ -88,22 +88,33 @@ a {
   border-color: var(--color-gold-dark);
 }
 
-/* ===================== INTRO (SCROLL) ===================== */
+/* ===================== INTRO + HERO (SESSÃO ÚNICA, SCROLL) ===================== */
 
-.intro-scroll {
+.intro-hero {
   position: relative;
-  height: 220vh;
+  height: 200vh;
 }
 
-.intro-sticky {
+.intro-hero-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #ffffff, #f0f0f0 75%);
+}
+
+.intro-layer,
+.hero-layer {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background: radial-gradient(circle at 50% 30%, #ffffff, #f0f0f0 75%);
+}
+
+.hero-layer {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .skip-intro {
@@ -287,11 +298,6 @@ a {
   .nav {
     display: flex;
   }
-}
-
-.hero {
-  background: var(--color-bg-alt);
-  padding: 60px 0;
 }
 
 .hero-inner {
