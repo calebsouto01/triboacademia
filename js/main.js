@@ -77,3 +77,71 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
+
+// Seção "Nosso Time": card central que troca de profissional em cascata
+// conforme o scroll, mesma técnica de scroll pinado + easing da intro/hero,
+// generalizada para N fases (uma por profissional).
+(function () {
+  var section = document.getElementById("equipe");
+  if (!section) return;
+
+  var profiles = Array.prototype.slice.call(section.querySelectorAll(".team-profile"));
+  var dots = Array.prototype.slice.call(section.querySelectorAll(".team-dot"));
+  if (profiles.length === 0) return;
+
+  var count = profiles.length;
+  var ticking = false;
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function smoothstep(t) {
+    t = clamp(t, 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  function update() {
+    ticking = false;
+
+    var rect = section.getBoundingClientRect();
+    var scrollable = section.offsetHeight - window.innerHeight;
+    var progress = scrollable > 0 ? clamp(-rect.top / scrollable, 0, 1) : 0;
+
+    var scaled = progress * count;
+    var index = Math.min(Math.floor(scaled), count - 1);
+    var local = scaled - index;
+    var isLast = index === count - 1;
+
+    profiles.forEach(function (profile, i) {
+      var opacity;
+
+      if (i === index) {
+        opacity = isLast || local < 0.7 ? 1 : 1 - smoothstep((local - 0.7) / 0.3);
+      } else if (i === index + 1 && !isLast) {
+        opacity = local < 0.7 ? 0 : smoothstep((local - 0.7) / 0.3);
+      } else {
+        opacity = 0;
+      }
+
+      profile.style.opacity = opacity;
+      profile.style.transform = "translateY(" + (1 - opacity) * 16 + "px)";
+      profile.style.pointerEvents = opacity > 0.5 ? "auto" : "none";
+    });
+
+    dots.forEach(function (dot, i) {
+      dot.classList.toggle("is-active", i === index);
+    });
+  }
+
+  function requestUpdate() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+  update();
+})();

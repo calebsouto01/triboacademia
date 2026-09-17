@@ -41,17 +41,18 @@
 
       <!-- Camada 2: hero -->
       <div class="hero-layer" id="heroLayer">
+        <div class="hero-banner-bg" aria-hidden="true">
+          <img src="assets/images/interior.jpg" alt="" />
+          <div class="hero-banner-overlay"></div>
+        </div>
         <div class="container hero-inner">
           <div class="hero-content">
             <h1>Sua jornada começa com um movimento.</h1>
             <p>Estrutura completa, treinos para todos os níveis e uma equipe pronta pra te levar mais longe.</p>
-            <a href="#contato" class="btn btn-primary">Comece agora</a>
+            <a href="#localizacao" class="btn btn-primary">Comece agora</a>
           </div>
           <div class="hero-illustration" aria-hidden="true">
-            <div class="hero-photo-stack">
-              <img src="assets/images/hero-main.jpg" alt="" class="hero-photo-main" />
-              <img src="assets/images/hero-accent.jpg" alt="" class="hero-photo-accent" />
-            </div>
+            <img src="assets/images/fachada.jpg" alt="Fachada da Tribo Academia" class="hero-gym-photo" />
           </div>
         </div>
       </div>
@@ -68,11 +69,12 @@
         <img src="assets/images/logo.png" alt="Tribo Academia" class="header-logo" />
         <nav class="nav">
           <a href="#sobre">Sobre</a>
-          <a href="#planos">Planos</a>
+          <a href="#equipe">Equipe</a>
           <a href="#horarios">Horários</a>
-          <a href="#contato">Contato</a>
+          <a href="#localizacao">Localização</a>
+          <a href="#planos">Planos</a>
         </nav>
-        <a href="#contato" class="btn btn-primary nav-cta">Matricule-se</a>
+        <a href="#localizacao" class="btn btn-primary nav-cta">Matricule-se</a>
       </div>
     </header>
 
@@ -85,6 +87,20 @@
           equipamentos de última geração e aulas coletivas para todos os níveis:
           G.A.P, Ritbox, Dança e Funcional.
         </p>
+        <div class="sobre-stats">
+          <div class="stat-item">
+            <div class="stat-number">+2</div>
+            <div class="stat-label">anos de Tribo</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">modalidades coletivas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">equipada</div>
+          </div>
+        </div>
         <div class="gallery">
           <div class="gallery-item gallery-item-photo">
             <img src="assets/images/fachada.jpg" alt="Fachada da Tribo Academia" />
@@ -97,35 +113,52 @@
       </div>
     </section>
 
-    <!-- Planos -->
-    <section id="planos" class="section section-alt">
-      <div class="container">
-        <h2>Conheça Nossos Planos</h2>
-        <p class="section-hashtag">#VEM PARA TRIBO</p>
-        <div class="plans">
-          <div class="plan-card">
-            <h3>6x na semana</h3>
-            <p class="plan-price">R$ 85<span>/mês</span></p>
+    <!-- Nosso Time -->
+    <section id="equipe" class="team-scroll">
+      <div class="team-sticky">
+        <div class="container team-inner">
+          <div class="team-heading">
+            <p class="section-hashtag">NOSSO TIME</p>
+            <h2>Profissionais que vão com você</h2>
+            <p class="section-note">*Nomes e especializações ilustrativos — atualizar com a equipe real.</p>
           </div>
-          <div class="plan-card">
-            <h3>3x na semana</h3>
-            <p class="plan-price">R$ 75<span>/mês</span></p>
+
+          <div class="team-card">
+            <div class="team-profile">
+              <div class="team-avatar">RM</div>
+              <div class="team-name">Rafael Martins</div>
+              <div class="team-role">Personal Trainer</div>
+              <div class="team-tags">
+                <span>Musculação</span>
+                <span>Hipertrofia</span>
+              </div>
+            </div>
+            <div class="team-profile">
+              <div class="team-avatar">CD</div>
+              <div class="team-name">Camila Duarte</div>
+              <div class="team-role">Instrutora de Funcional</div>
+              <div class="team-tags">
+                <span>Funcional</span>
+                <span>Mobilidade</span>
+              </div>
+            </div>
+            <div class="team-profile">
+              <div class="team-avatar">JR</div>
+              <div class="team-name">Juliana Ramos</div>
+              <div class="team-role">Coach de Ritbox &amp; Dança</div>
+              <div class="team-tags">
+                <span>Ritbox</span>
+                <span>Condicionamento</span>
+              </div>
+            </div>
           </div>
-          <div class="plan-card plan-card-highlight">
-            <h3>Plano Família</h3>
-            <p class="plan-price">R$ 80<span>/mês</span></p>
-            <p class="plan-note">A partir de 2 pessoas</p>
-          </div>
-          <div class="plan-card">
-            <h3>Horário Promocional</h3>
-            <p class="plan-price">R$ 65<span>/mês</span></p>
-            <p class="plan-note">Consultar horários</p>
+
+          <div class="team-dots" aria-hidden="true">
+            <span class="team-dot"></span>
+            <span class="team-dot"></span>
+            <span class="team-dot"></span>
           </div>
         </div>
-        <p class="section-note">Aulas coletivas inclusas: G.A.P, Ritbox, Dança, Funcional.</p>
-        <p class="section-center">
-          <a href="#contato" class="btn btn-primary">Quero me matricular</a>
-        </p>
       </div>
     </section>
 
@@ -193,11 +226,11 @@
       </div>
     </section>
 
-    <!-- Contato -->
-    <section id="contato" class="section section-alt">
-      <div class="container contact-grid">
-        <div>
-          <h2>Contato</h2>
+    <!-- Localização -->
+    <section id="localizacao" class="section section-alt">
+      <div class="container localizacao-grid">
+        <div class="localizacao-info">
+          <h2>Onde Estamos</h2>
           <p>Endereço: Rua Quito, 248 — próximo ao UNEX</p>
           <p>Telefone / WhatsApp: (75) 98217-6868</p>
           <p>Instagram: <a href="https://instagram.com/Tribo_academia2023" target="_blank" rel="noopener">@Tribo_academia2023</a></p>
@@ -206,8 +239,50 @@
               Falar no WhatsApp
             </a>
           </p>
+          <div class="localizacao-photos">
+            <img src="assets/images/fachada.jpg" alt="Fachada da Tribo Academia" />
+            <img src="assets/images/interior.jpg" alt="Interior da Tribo Academia" />
+          </div>
         </div>
-        <div class="map-placeholder">[MAPA — RUA QUITO, 248]</div>
+        <div class="map-placeholder">
+          <div class="map-pin" aria-hidden="true"></div>
+          <div class="map-label">
+            <strong>Tribo Academia</strong>
+            <span>[Posicionamento do Google Maps aqui]</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planos -->
+    <section id="planos" class="section section-alt">
+      <div class="container">
+        <h2>Conheça Nossos Planos</h2>
+        <p class="section-hashtag">#VEM PARA TRIBO</p>
+        <div class="plans">
+          <div class="plan-card">
+            <h3>6x na semana</h3>
+            <p class="plan-price">R$ 85<span>/mês</span></p>
+          </div>
+          <div class="plan-card">
+            <h3>3x na semana</h3>
+            <p class="plan-price">R$ 75<span>/mês</span></p>
+          </div>
+          <div class="plan-card plan-card-highlight">
+            <h3>Plano Família</h3>
+            <p class="plan-price">R$ 80<span>/mês</span></p>
+            <p class="plan-note">A partir de 2 pessoas</p>
+          </div>
+          <div class="plan-card">
+            <h3>Horário Promocional</h3>
+            <p class="plan-price">R$ 65<span>/mês</span></p>
+            <p class="plan-note">Consultar horários</p>
+          </div>
+        </div>
+        <p class="section-note">Aulas coletivas inclusas: G.A.P, Ritbox, Dança, Funcional.</p>
+        <p class="section-center">
+          <a href="#localizacao" class="btn btn-primary">Quero me matricular</a>
+        </p>
       </div>
     </section>
 
