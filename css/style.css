@@ -294,9 +294,20 @@ a {
   }
 }
 
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .hero-inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   justify-content: flex-start;
 }
@@ -576,61 +587,48 @@ a {
   color: var(--color-text-muted);
 }
 
-/* ===================== NOSSO TIME (SCROLL EM CASCATA) ===================== */
-
-.team-scroll {
-  position: relative;
-  height: 300vh;
-}
-
-.team-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: var(--color-bg-alt);
-}
-
-.team-inner {
-  width: 100%;
-  text-align: center;
-}
+/* ===================== NOSSO TIME (CARTÕES QUE EMPILHAM) ===================== */
 
 .team-heading {
-  margin-bottom: 40px;
+  text-align: center;
+  margin-bottom: 44px;
 }
 
-.team-card {
-  position: relative;
-  max-width: 420px;
-  height: 320px;
+.team-stack {
+  max-width: 640px;
   margin: 0 auto;
+  padding-bottom: 40px;
 }
 
-.team-profile {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+.team-folha {
+  position: sticky;
+  top: 90px;
+  margin-bottom: 16px;
   border-radius: 20px;
-  padding: 40px 28px;
-  box-sizing: border-box;
-  opacity: 0;
+  padding: 26px 30px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.28);
+  will-change: transform, filter;
 }
 
-.team-profile:first-child {
-  opacity: 1;
+.team-folha-1 {
+  background: linear-gradient(150deg, #2b2b2b, #121212);
 }
 
-.team-avatar {
-  width: 92px;
-  height: 92px;
+.team-folha-2 {
+  background: linear-gradient(150deg, #3a2f14, #171208);
+}
+
+.team-folha-3 {
+  background: linear-gradient(150deg, #241a2c, #100c14);
+}
+
+.team-folha .team-avatar {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
   background: var(--gradient-brand);
   color: #ffffff;
@@ -638,57 +636,52 @@ a {
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 24px;
 }
 
-.team-name {
-  font-family: inherit;
-  font-size: 22px;
+.team-folha-body {
+  min-width: 0;
+}
+
+.team-folha .team-name {
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 4px;
+  color: #ffffff;
 }
 
-.team-role {
-  color: var(--color-gold-dark);
-  font-size: 14px;
+.team-folha .team-role {
+  color: var(--color-gold);
+  font-size: 13px;
   font-weight: 600;
-  margin-bottom: 18px;
+  margin: 3px 0 12px;
 }
 
-.team-tags {
+.team-folha .team-tags {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
-.team-tags span {
-  background: var(--color-bg-alt);
-  border: 1px solid var(--color-border);
+.team-folha .team-tags span {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 5px 12px;
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.78);
 }
 
-.team-dots {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 32px;
-}
+@media (max-width: 480px) {
+  .team-folha {
+    padding: 20px;
+    gap: 16px;
+  }
 
-.team-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-border);
-  transition: background 0.3s ease;
-}
-
-.team-dot.is-active {
-  background: var(--color-gold-dark);
+  .team-folha .team-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 18px;
+  }
 }
 
 .footer {
