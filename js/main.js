@@ -1,34 +1,35 @@
+// Intro: o usuário PUXA a barra triangular (mouse ou toque) pra levantar o
+// peso, como numa máquina de cabo de verdade. Nada mais depende de scroll —
+// o gesto é discreto e controlado pelo próprio usuário, então não tem como
+// "vencer" a leitura rolando rápido: ele só avança quando decide puxar.
 (function () {
-  var section = document.getElementById("intro-hero");
-  var track = document.querySelector(".pulley-track");
   var weight = document.getElementById("pulley-weight");
+  var track = document.querySelector(".pulley-track");
+  var scaleIndicator = document.getElementById("pulleyScaleIndicator");
+  var pullTrack = document.getElementById("pullTrack");
+  var pullBar = document.getElementById("pullBar");
+  var pullCable = document.getElementById("pullCable");
   var introLayer = document.getElementById("introLayer");
-  var introStep = document.querySelector(".intro-step");
-  var introArrow = document.querySelector(".pulley-arrow");
-  var introImpact = document.getElementById("introImpact");
-  var introImpactText = introImpact ? introImpact.querySelector(".intro-impact-text") : null;
-  var introImpactFullText = introImpact ? introImpact.getAttribute("data-text") || "" : "";
-  var introImpactShown = -1;
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
   var header = document.querySelector(".header");
+  var skipIntro = document.getElementById("skipIntro");
 
-  // Fases pensadas como o tempo de um leitor executando o movimento: o peso
-  // sobe devagar o bastante pra sentir o esforço, a frase de impacto digita
-  // no próprio ritmo da leitura, e ainda sobra um respiro antes do corte de
-  // cena — nada acontece rápido demais pra não dar tempo de perceber.
-  var INTRO_END = 0.3; // peso termina de subir aqui
-  var IMPACT_START = 0; // frase de impacto já começa a digitar junto com o peso, prendendo a atenção nos dois movimentos ao mesmo tempo
-  var IMPACT_TYPE_END = 0.6; // frase totalmente digitada aqui
-  var REVEAL_TRIGGER = 0.85; // respiro pra ler a frase pronta antes do corte de cena disparar
+  if (!weight || !track || !pullTrack || !pullBar) return;
+
+  var TRIGGER_VALUE = 45; // cruzou isso na escala 0-100, o corte de cena dispara sozinho
   var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
   }
 
   var revealed = false;
   var revealing = false;
+  var dragging = false;
+  var value = 0; // 0-100, posição atual na "escala de carga"
+  var startY = 0;
+  var startValue = 0;
 
   function preventScroll(ev) {
     ev.preventDefault();
@@ -48,14 +49,47 @@
     window.removeEventListener("touchmove", preventScroll, { passive: false });
   }
 
-  // Fase 2: corte de cena único — não é mais proporcional ao scroll pixel a
-  // pixel. Ao cruzar o gatilho, uma máscara circular (aplicada via
-  // clip-path direto no heroLayer) se expande sozinha a partir do centro,
-  // como um portal se abrindo, revelando a hero por trás da intro.
+  // A página fica travada até o usuário puxar a barra (ou pular a intro) —
+  // sem isso, dava pra rolar direto pro site sem o cabeçalho/whatsapp
+  // aparecerem (eles só ligam depois do corte de cena).
+  lockScroll();
+
+  function applyValue(v) {
+    value = clamp(v, 0, 100);
+    var frac = value / 100;
+
+    var weightTravel = Math.max(track.clientHeight - weight.offsetHeight - 28, 0);
+    weight.style.transform = "translate(-50%, " + -(frac * weightTravel) + "px)";
+
+    var barTravel = Math.max(pullTrack.clientHeight - pullBar.offsetHeight - 20, 0);
+    pullBar.style.transform = "translate(-50%, " + frac * barTravel + "px)";
+
+    if (scaleIndicator) scaleIndicator.style.bottom = frac * 100 + "%";
+    if (pullCable) pullCable.style.setProperty("--tension", frac);
+
+    if (!revealed && !revealing && value >= TRIGGER_VALUE) {
+      triggerReveal();
+    }
+  }
+
+  // Soltou antes de puxar o suficiente: o cabo "recolhe" o peso de volta,
+  // convidando a puxar de novo.
+  function snapBack() {
+    pullBar.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+    weight.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+    applyValue(0);
+    window.setTimeout(function () {
+      pullBar.style.transition = "";
+      weight.style.transition = "";
+    }, 400);
+  }
+
+  // Corte de cena único: uma máscara circular (clip-path direto no
+  // heroLayer) se expande a partir do centro, como um portal se abrindo,
+  // revelando a hero por trás da intro.
   function triggerReveal() {
     if (revealed || revealing) return;
     revealing = true;
-    lockScroll();
 
     if (introLayer) introLayer.style.pointerEvents = "none";
     if (heroLayer) {
@@ -67,61 +101,48 @@
       revealed = true;
       revealing = false;
       unlockScroll();
+      if (whatsappFloat) whatsappFloat.hidden = false;
+      if (header) header.classList.add("is-visible");
     }, REVEAL_DURATION);
   }
 
-  var ticking = false;
-
-  function updateIntro() {
-    ticking = false;
-    if (!section || !track || !weight) return;
-
-    var rect = section.getBoundingClientRect();
-    var scrollable = section.offsetHeight - window.innerHeight;
-    var progress = scrollable > 0 ? clamp(-rect.top / scrollable, 0, 1) : 1;
-
-    // Fase 1: peso sobe — o indicativo "role para baixo" só acompanha em
-    // opacidade, sem efeito especial (o destaque agora é da frase de impacto).
-    var introProgress = clamp(progress / INTRO_END, 0, 1);
-    var travel = Math.max(track.clientHeight - weight.offsetHeight - 28, 0);
-    weight.style.transform = "translate(-50%, " + -(introProgress * travel) + "px)";
-
-    if (introStep) introStep.style.opacity = introProgress > 0.6 ? 0 : 1;
-    if (introArrow) introArrow.style.opacity = introProgress > 0.4 ? 0 : 1;
-
-    // Fase 2: frase de impacto em máquina de escrever, ao lado do peso —
-    // começa a digitar assim que o peso chega ao topo e tem um trecho
-    // inteiro de scroll só pra digitação + outro só pra leitura (dwell)
-    // antes do corte de cena dar sequência.
-    if (introImpact) introImpact.classList.toggle("is-visible", progress > IMPACT_START);
-    if (introImpactText && introImpactFullText) {
-      var impactProgress = clamp((progress - IMPACT_START) / (IMPACT_TYPE_END - IMPACT_START), 0, 1);
-      var charsShown = Math.round(impactProgress * introImpactFullText.length);
-      if (charsShown !== introImpactShown) {
-        introImpactShown = charsShown;
-        introImpactText.textContent = introImpactFullText.slice(0, charsShown);
-      }
-    }
-
-    if (!revealed && !revealing && progress > REVEAL_TRIGGER) {
-      triggerReveal();
-    }
-
-    // Cabeçalho e WhatsApp só aparecem depois do corte de cena da intro.
-    if (whatsappFloat) whatsappFloat.hidden = !revealed;
-    if (header) header.classList.toggle("is-visible", revealed);
+  function onPointerDown(ev) {
+    if (revealed || revealing) return;
+    dragging = true;
+    startY = ev.clientY;
+    startValue = value;
+    pullBar.style.transition = "";
+    weight.style.transition = "";
+    if (pullBar.setPointerCapture) pullBar.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
   }
 
-  function requestUpdate() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(updateIntro);
-    }
+  function onPointerMove(ev) {
+    if (!dragging) return;
+    var barTravel = Math.max(pullTrack.clientHeight - pullBar.offsetHeight - 20, 0);
+    var deltaValue = barTravel > 0 ? ((ev.clientY - startY) / barTravel) * 100 : 0;
+    applyValue(startValue + deltaValue);
   }
 
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate);
-  updateIntro();
+  function onPointerUp() {
+    if (!dragging) return;
+    dragging = false;
+    if (!revealed && !revealing) snapBack();
+  }
+
+  pullBar.addEventListener("pointerdown", onPointerDown);
+  pullBar.addEventListener("pointermove", onPointerMove);
+  pullBar.addEventListener("pointerup", onPointerUp);
+  pullBar.addEventListener("pointercancel", onPointerUp);
+
+  if (skipIntro) {
+    skipIntro.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      if (!revealed && !revealing) triggerReveal();
+    });
+  }
+
+  applyValue(0);
 
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();

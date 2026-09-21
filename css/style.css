@@ -93,7 +93,7 @@ a {
 
 .intro-hero {
   position: relative;
-  height: 300vh;
+  height: 100vh;
 }
 
 .intro-hero-sticky {
@@ -152,86 +152,30 @@ a {
 .intro-content {
   text-align: center;
   padding: 20px;
-  max-width: min(680px, 92vw);
+  max-width: min(560px, 92vw);
 }
 
 .intro-logo {
   width: 84px;
   height: auto;
-  margin-bottom: 30px;
+  margin-bottom: 36px;
   border-radius: 50%;
 }
 
-.intro-step {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: var(--color-text);
-  transition: opacity 0.3s ease;
-}
-
-/* Peso + frase de impacto lado a lado: o resultado ganha o protagonismo
-   visual, não o indicativo de rolagem. */
+/* Peso (esquerda) + barra triangular pra puxar (direita): o usuário puxa
+   de verdade, como numa máquina de cabo, em vez de só rolar a página. */
 .intro-motion {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  gap: 36px;
-  text-align: left;
+  gap: 28px;
 }
 
 .pulley {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-end;
+  gap: 8px;
   flex-shrink: 0;
-}
-
-.intro-impact {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: 0.2px;
-  margin: 0;
-  max-width: 360px;
-  color: var(--color-gold-dark);
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.intro-impact.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.intro-impact-cursor {
-  display: inline-block;
-  width: 4px;
-  height: 0.85em;
-  margin-left: 3px;
-  background: var(--color-gold-dark);
-  vertical-align: -0.1em;
-  animation: blink-cursor 0.9s steps(1) infinite;
-}
-
-@keyframes blink-cursor {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-@media (max-width: 700px) {
-  .intro-motion {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .intro-impact {
-    max-width: 320px;
-    text-align: center;
-  }
 }
 
 .pulley-track {
@@ -280,16 +224,137 @@ a {
   border-radius: 2px;
 }
 
-.pulley-arrow {
-  color: var(--color-gold-dark);
-  font-size: 1.5rem;
-  animation: bounce 1.4s infinite;
-  transition: opacity 0.3s ease;
+/* Escala 0-100, como o pino seletor de carga de uma máquina de verdade. */
+.pulley-scale {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 260px;
+  padding: 4px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(8px); }
+.pulley-scale-indicator {
+  position: absolute;
+  left: -6px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid var(--color-gold-dark);
+  transition: bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pull-rig {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pull-track {
+  position: relative;
+  width: 90px;
+  height: 260px;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg-alt);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.pull-cable {
+  --tension: 0;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: calc(100% - 20px);
+  border-radius: 4px;
+  background: linear-gradient(180deg, #c4c4c4, #6e6e6e 45%, #c4c4c4 55%, #8a8a8a);
+  box-shadow: 0 0 calc(3px + var(--tension) * 14px) rgba(255, 255, 255, calc(0.2 + var(--tension) * 0.6));
+  filter: brightness(calc(1 + var(--tension) * 0.4));
+}
+
+.pull-bar {
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  width: 64px;
+  height: 46px;
+  transform: translate(-50%, 0);
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  background: linear-gradient(135deg, #e2e2e2, #8a8a8a 45%, #e2e2e2 60%, #6e6e6e);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+}
+
+.pull-bar:active {
+  cursor: grabbing;
+}
+
+.pull-label {
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.pull-arrows {
+  display: flex;
+  gap: 4px;
+  color: var(--color-gold-dark);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.pull-arrows span {
+  animation: blink-cursor 1s steps(1) infinite;
+}
+
+.pull-arrows span:last-child {
+  animation-delay: 0.5s;
+}
+
+@keyframes blink-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.15; }
+}
+
+@media (max-width: 640px) {
+  .intro-motion {
+    gap: 20px;
+  }
+
+  .pulley-track,
+  .pull-track {
+    width: 74px;
+    height: 220px;
+  }
+
+  .pulley-scale {
+    height: 220px;
+  }
+
+  .pulley-weight {
+    width: 56px;
+    height: 60px;
+  }
+
+  .pull-bar {
+    width: 54px;
+    height: 40px;
+  }
 }
 
 /* ===================== SITE ===================== */

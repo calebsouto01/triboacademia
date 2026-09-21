@@ -31,13 +31,12 @@
   <section id="intro-hero" class="intro-hero">
     <div class="intro-hero-sticky">
 
-      <!-- Camada 1: intro (peso subindo) -->
+      <!-- Camada 1: intro (puxar a barra levanta o peso) -->
       <div class="intro-layer" id="introLayer">
-        <a href="#site" class="skip-intro">Pular introdução</a>
+        <a href="#" id="skipIntro" class="skip-intro">Pular introdução</a>
 
         <div class="intro-content">
           <img src="assets/images/logo.png" alt="Tribo Academia" class="intro-logo" />
-          <p class="intro-step">Role para baixo para começar</p>
 
           <div class="intro-motion">
             <div class="pulley">
@@ -49,12 +48,26 @@
                   <span class="pulley-weight-line"></span>
                 </div>
               </div>
-              <div class="pulley-arrow" aria-hidden="true">&#8595;</div>
+              <div class="pulley-scale" aria-hidden="true">
+                <span>100</span>
+                <span>75</span>
+                <span>50</span>
+                <span>25</span>
+                <span>0</span>
+                <div class="pulley-scale-indicator" id="pulleyScaleIndicator"></div>
+              </div>
             </div>
 
-            <p class="intro-impact" id="introImpact" data-text="Você fez seu primeiro movimento rumo aos resultados!">
-              <span class="intro-impact-text"></span><span class="intro-impact-cursor" aria-hidden="true"></span>
-            </p>
+            <div class="pull-rig">
+              <div class="pull-track" id="pullTrack">
+                <div class="pull-cable" id="pullCable"></div>
+                <div class="pull-bar" id="pullBar"></div>
+              </div>
+              <p class="pull-label">
+                Puxe
+                <span class="pull-arrows" aria-hidden="true"><span>&#8964;</span><span>&#8964;</span></span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -67,7 +80,7 @@
         </div>
         <div class="container hero-inner">
           <div class="hero-content">
-            <h1>Sua jornada começa com um movimento.</h1>
+            <h1>Você fez seu primeiro movimento rumo aos resultados!</h1>
             <p>Estrutura completa, treinos para todos os níveis e uma equipe pronta pra te levar mais longe.</p>
             <a href="#localizacao" class="btn btn-primary">Comece agora</a>
           </div>
