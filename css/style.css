@@ -261,25 +261,30 @@ a {
 .drag-hint {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
   transition: opacity 0.25s ease;
+}
+
+.drag-hint-label {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 4.5vw, 19px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ffffff;
 }
 
 .drag-hint-arrows {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .drag-hint-arrows span {
-  font-size: 9px;
+  font-size: 13px;
   line-height: 1;
+  color: #ffffff;
   animation: drag-arrow-blink 1.3s ease-in-out infinite;
 }
 
