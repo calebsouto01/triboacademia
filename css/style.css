@@ -632,6 +632,53 @@ a {
   box-shadow: 0 0 0 1px var(--color-gold);
 }
 
+/* Anel de destaque numa camada própria (::after), independente do
+   box-shadow/border do painel — assim funciona igual em cima do estado
+   fechado ou aberto, sem precisar conhecer o valor de base de cada um.
+   Pisca em sequência (1º, 2º, 3º, 4º) na primeira vez que a seção
+   aparece, pra sinalizar que os painéis são clicáveis. */
+.plan-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 0 rgba(242, 194, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.plans.is-hinting .plan-panel::after {
+  animation: plan-panel-hint 1s ease-in-out;
+}
+
+.plans.is-hinting .plan-panel:nth-child(1)::after {
+  animation-delay: 0s;
+}
+
+.plans.is-hinting .plan-panel:nth-child(2)::after {
+  animation-delay: 0.5s;
+}
+
+.plans.is-hinting .plan-panel:nth-child(3)::after {
+  animation-delay: 1s;
+}
+
+.plans.is-hinting .plan-panel:nth-child(4)::after {
+  animation-delay: 1.5s;
+}
+
+@keyframes plan-panel-hint {
+  0%,
+  100% {
+    opacity: 0;
+    box-shadow: inset 0 0 0 0 rgba(242, 194, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: inset 0 0 0 3px rgba(242, 194, 0, 0.85);
+  }
+}
+
 .plan-panel-label {
   position: absolute;
   font-size: 0.9rem;

@@ -443,12 +443,14 @@
   var panels = Array.prototype.slice.call(document.querySelectorAll(".plan-panel"));
   if (panels.length === 0) return;
 
+  var plansEl = document.querySelector(".plans");
   var hasHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
 
   function openPanel(target) {
     panels.forEach(function (p) {
       p.classList.toggle("is-open", p === target);
     });
+    if (plansEl) plansEl.classList.remove("is-hinting");
   }
 
   panels.forEach(function (panel) {
@@ -461,4 +463,22 @@
       });
     }
   });
+
+  // Na primeira vez que a seção aparece, os painéis piscam em sequência
+  // (1º, depois 2º, depois 3º...) só pra sinalizar que dá pra clicar —
+  // roda uma vez e para sozinho; qualquer clique/hover cancela na hora.
+  if (plansEl && "IntersectionObserver" in window) {
+    var hintObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            plansEl.classList.add("is-hinting");
+            hintObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    hintObserver.observe(plansEl);
+  }
 })();
