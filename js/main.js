@@ -38,6 +38,34 @@
     return a + (b - a) * t;
   }
 
+  var SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&@*";
+  var scrambleStop = null;
+
+  // Painel de aeroporto: as letras giram e vão travando da esquerda pra
+  // direita até formar a palavra. Toda vez que o rótulo do puxador aparece
+  // ou muda ("Puxe" / "Puxe de novo"), ele entra assim em vez de só trocar.
+  function scrambleLabel(finalText) {
+    if (!dragHintLabel) return;
+    if (scrambleStop) scrambleStop();
+    var frame = 0;
+    var rafId;
+    function spin() {
+      var locked = Math.floor(frame / 3);
+      var out = "";
+      for (var i = 0; i < finalText.length; i++) {
+        out += i < locked || finalText[i] === " " ? finalText[i] : SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0];
+      }
+      dragHintLabel.textContent = out;
+      frame++;
+      if (locked <= finalText.length) rafId = requestAnimationFrame(spin);
+    }
+    spin();
+    scrambleStop = function () {
+      cancelAnimationFrame(rafId);
+      scrambleStop = null;
+    };
+  }
+
   // Amarra visualmente a trilha ao checkpoint: a marcação fica exatamente
   // na metade do curso do puxador, onde a 1ª puxada trava.
   function positionRailMark() {
@@ -114,7 +142,6 @@
 
     if (!checkpointReached && value >= CHECKPOINT_VALUE) {
       checkpointReached = true;
-      if (dragHintLabel) dragHintLabel.textContent = "Puxe de novo";
     }
 
     // 2ª puxada: o corte de cena é raspado ao vivo pela posição do
@@ -138,6 +165,7 @@
     dragHandle.style.transition = "transform " + easing;
     applyValue(0);
     if (dragHint) dragHint.style.opacity = 1;
+    scrambleLabel("Puxe");
     window.setTimeout(function () {
       cableText.style.transition = "";
       dragHandle.style.transition = "";
@@ -154,6 +182,7 @@
     if (heroLayer) heroLayer.style.transition = "clip-path " + easing;
     applyValue(CHECKPOINT_VALUE);
     if (dragHint) dragHint.style.opacity = 1;
+    scrambleLabel("Puxe de novo");
     window.setTimeout(function () {
       dragHandle.style.transition = "";
       if (heroLayer) heroLayer.style.transition = "";
@@ -201,6 +230,7 @@
     dragHandle.style.transition = "";
     if (heroLayer) heroLayer.style.transition = "none"; // raspagem ao vivo, sem lag de transition
     if (dragHint) dragHint.style.opacity = 0;
+    if (scrambleStop) scrambleStop();
     if (dragHandle.setPointerCapture) dragHandle.setPointerCapture(ev.pointerId);
     ev.preventDefault();
   }
@@ -238,6 +268,7 @@
   positionRailMark();
   window.addEventListener("resize", positionRailMark);
   applyValue(0);
+  scrambleLabel("Puxe");
 
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
