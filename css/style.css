@@ -694,19 +694,32 @@ a {
   }
 }
 
+/* A seção fica "presa" na tela (sticky) por uma altura extra calculada
+   via JS igual à distância que a faixa precisa andar — enquanto a página
+   rola por essa altura extra, o scroll vertical é convertido em
+   translateX na faixa; ao final, a seção libera o scroll normal. */
+#horarios.horarios-scroll {
+  padding: 0;
+}
+
+.horarios-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
 .horarios-gallery {
   display: flex;
   gap: 16px;
   margin-top: 24px;
-  padding-bottom: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+  will-change: transform;
 }
 
 .horario-card {
-  flex: 0 0 clamp(200px, 70vw, 240px);
-  scroll-snap-align: start;
+  flex: 0 0 clamp(240px, 34vw, 420px);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);

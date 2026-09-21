@@ -356,6 +356,56 @@
   update();
 })();
 
+// Horários: a seção fica presa na tela por uma altura extra (calculada a
+// partir da largura real da faixa de cards) — enquanto a página rola por
+// essa altura, a rolagem vertical vira deslocamento horizontal na faixa;
+// ao terminar, a seção libera o scroll normal sozinha (sem hijack manual
+// de wheel/touch — é tudo scroll nativo, só reinterpretado via sticky).
+(function () {
+  var section = document.getElementById("horarios");
+  var track = document.getElementById("horariosGallery");
+  if (!section || !track) return;
+
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  var panDistance = 0;
+
+  function recalc() {
+    panDistance = Math.max(track.scrollWidth - window.innerWidth, 0);
+    section.style.height = panDistance + window.innerHeight + "px";
+  }
+
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    if (panDistance <= 0) {
+      track.style.transform = "";
+      return;
+    }
+    var rect = section.getBoundingClientRect();
+    var progress = clamp(-rect.top / panDistance, 0, 1);
+    track.style.transform = "translateX(-" + progress * panDistance + "px)";
+  }
+
+  function requestUpdate() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  recalc();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", function () {
+    recalc();
+    requestUpdate();
+  });
+  update();
+})();
+
 // Revela ao rolar: fade + leve translateY pra seções que hoje aparecem
 // estáticas (Sobre, Horários, Localização), dando movimento consistente
 // com o resto do site sem uma animação diferente por seção.
