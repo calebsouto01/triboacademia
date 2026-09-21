@@ -182,6 +182,12 @@ a {
   will-change: transform, filter, opacity;
 }
 
+/* Quebra a "parede branca": a palavra-payoff da frase sai na cor da
+   marca, dando contraste sem entregar logo/nome ainda. */
+.intro-cable-text .cable-text-highlight {
+  color: var(--color-gold);
+}
+
 .drag-rail {
   position: relative;
   width: 4px;
