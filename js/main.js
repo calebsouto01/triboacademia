@@ -54,6 +54,12 @@
   var value = 0; // 0-100
   var startY = 0;
   var startValue = 0;
+  // Teto da sessão de arraste atual: enquanto o checkpoint não foi
+  // conquistado (por uma puxada anterior já solta), o teto é o próprio
+  // checkpoint — não dá pra atravessar as duas etapas num puxão só,
+  // rápido demais pra dar tempo de ler o texto. Só depois de soltar e
+  // agarrar de novo (2ª puxada) o teto sobe pra 100.
+  var dragCap = CHECKPOINT_VALUE;
 
   function preventScroll(ev) {
     ev.preventDefault();
@@ -80,9 +86,12 @@
 
   function applyValue(v) {
     // Depois do checkpoint, o piso deixa de ser 0: é catraca, não dá mais
-    // pra puxar de volta além do ponto já conquistado.
+    // pra puxar de volta além do ponto já conquistado. E, durante o
+    // arraste, o teto trava a 1ª puxada no checkpoint — a única forma de
+    // ir além é soltar e agarrar de novo.
     var minValue = checkpointReached ? CHECKPOINT_VALUE : 0;
-    value = clamp(v, minValue, 100);
+    var maxValue = dragging ? dragCap : 100;
+    value = clamp(v, minValue, maxValue);
 
     // O texto termina de abrir exatamente no checkpoint — nunca antes nem
     // depois, então ele já está pronto quando a 1ª puxada trava.
@@ -185,6 +194,9 @@
     dragging = true;
     startY = ev.clientY;
     startValue = value;
+    // Só libera ir até o fim se o checkpoint já tinha sido conquistado
+    // numa puxada anterior (ou seja, essa é a 2ª puxada de verdade).
+    dragCap = checkpointReached ? 100 : CHECKPOINT_VALUE;
     cableText.style.transition = "";
     dragHandle.style.transition = "";
     if (heroLayer) heroLayer.style.transition = "none"; // raspagem ao vivo, sem lag de transition
