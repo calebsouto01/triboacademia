@@ -3,7 +3,10 @@
   var track = document.querySelector(".pulley-track");
   var weight = document.getElementById("pulley-weight");
   var introLayer = document.getElementById("introLayer");
-  var introStep = document.querySelector(".intro-step");
+  var introStep = document.getElementById("introStep");
+  var introStepText = introStep ? introStep.querySelector(".intro-step-text") : null;
+  var introStepFullText = introStep ? introStep.getAttribute("data-text") || "" : "";
+  var introStepShown = -1;
   var introArrow = document.querySelector(".pulley-arrow");
   var successMsg = document.getElementById("intro-success");
   var heroLayer = document.getElementById("heroLayer");
@@ -75,6 +78,17 @@
     var introProgress = clamp(progress / INTRO_END, 0, 1);
     var travel = Math.max(track.clientHeight - weight.offsetHeight - 28, 0);
     weight.style.transform = "translate(-50%, " + -(introProgress * travel) + "px)";
+
+    // Texto em efeito de máquina de escrever: acompanha o peso subindo,
+    // revelando uma letra por vez até ~metade do trajeto.
+    if (introStepText && introStepFullText) {
+      var typeProgress = clamp(introProgress / 0.5, 0, 1);
+      var charsShown = Math.round(typeProgress * introStepFullText.length);
+      if (charsShown !== introStepShown) {
+        introStepShown = charsShown;
+        introStepText.textContent = introStepFullText.slice(0, charsShown);
+      }
+    }
 
     if (introStep) introStep.style.opacity = introProgress > 0.6 ? 0 : 1;
     if (introArrow) introArrow.style.opacity = introProgress > 0.4 ? 0 : 1;

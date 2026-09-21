@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tribo Academia</title>
   <meta name="description" content="Tribo Academia — treine com a gente e comece hoje o seu primeiro movimento rumo aos resultados." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -34,7 +37,9 @@
 
         <div class="intro-content">
           <img src="assets/images/logo.png" alt="Tribo Academia" class="intro-logo" />
-          <p class="intro-step">Role para baixo para começar</p>
+          <p class="intro-step" id="introStep" data-text="Role para baixo para começar">
+            <span class="intro-step-text"></span><span class="intro-step-cursor" aria-hidden="true"></span>
+          </p>
 
           <div class="pulley">
             <div class="pulley-track">
