@@ -211,16 +211,17 @@ a {
   cursor: grabbing;
 }
 
-/* Marcação fixa na trilha: o ponto exato em que o texto já está totalmente
-   aberto/legível — a "amarração" entre o gesto e a leitura. Acende em
-   dourado assim que o arraste passa por ela. */
+/* Marcação fixa na trilha: o ponto exato em que a primeira puxada trava —
+   texto já aberto, pronto pra segunda puxada. Formato de barra com "discos"
+   nas pontas (uma pequena barra de peso), acende em dourado ao ser
+   alcançada. */
 .drag-rail-mark {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 16px;
+  width: 24px;
   height: 2px;
-  margin-left: -8px;
+  margin-left: -12px;
   border-radius: 1px;
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-50%);
@@ -228,7 +229,31 @@ a {
   pointer-events: none;
 }
 
+.drag-rail-mark-plate {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.drag-rail-mark-plate-left {
+  left: -3px;
+}
+
+.drag-rail-mark-plate-right {
+  right: -3px;
+}
+
 .drag-rail-mark.is-reached {
+  background: var(--color-gold);
+  box-shadow: 0 0 8px rgba(242, 194, 0, 0.65);
+}
+
+.drag-rail-mark.is-reached .drag-rail-mark-plate {
   background: var(--color-gold);
   box-shadow: 0 0 8px rgba(242, 194, 0, 0.65);
 }
