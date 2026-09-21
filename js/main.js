@@ -18,7 +18,7 @@
   // no próprio ritmo da leitura, e ainda sobra um respiro antes do corte de
   // cena — nada acontece rápido demais pra não dar tempo de perceber.
   var INTRO_END = 0.3; // peso termina de subir aqui
-  var IMPACT_START = INTRO_END; // frase de impacto começa a aparecer/digitar quando o peso chega ao topo
+  var IMPACT_START = 0; // frase de impacto já começa a digitar junto com o peso, prendendo a atenção nos dois movimentos ao mesmo tempo
   var IMPACT_TYPE_END = 0.6; // frase totalmente digitada aqui
   var REVEAL_TRIGGER = 0.85; // respiro pra ler a frase pronta antes do corte de cena disparar
   var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
