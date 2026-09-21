@@ -204,13 +204,39 @@ a {
   cursor: grab;
   touch-action: none;
   will-change: transform;
+  z-index: 2;
 }
 
 .drag-handle:active {
   cursor: grabbing;
 }
 
+/* Marcação fixa na trilha: o ponto exato em que o texto já está totalmente
+   aberto/legível — a "amarração" entre o gesto e a leitura. Acende em
+   dourado assim que o arraste passa por ela. */
+.drag-rail-mark {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 16px;
+  height: 2px;
+  margin-left: -8px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  pointer-events: none;
+}
+
+.drag-rail-mark.is-reached {
+  background: var(--color-gold);
+  box-shadow: 0 0 8px rgba(242, 194, 0, 0.65);
+}
+
 .drag-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin: 0;
   font-size: 12px;
   font-weight: 600;
@@ -218,6 +244,36 @@ a {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.4);
   transition: opacity 0.25s ease;
+}
+
+.drag-hint-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.drag-hint-arrows span {
+  font-size: 9px;
+  line-height: 1;
+  animation: drag-arrow-blink 1.3s ease-in-out infinite;
+}
+
+.drag-hint-arrows span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.drag-hint-arrows span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes drag-arrow-blink {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 640px) {

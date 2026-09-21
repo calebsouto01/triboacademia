@@ -8,6 +8,7 @@
   var cableText = document.getElementById("introCableText");
   var railTrack = document.querySelector(".drag-rail");
   var dragHandle = document.getElementById("dragHandle");
+  var dragRailMark = document.getElementById("dragRailMark");
   var dragHint = document.getElementById("dragHint");
   var introLayer = document.getElementById("introLayer");
   var heroLayer = document.getElementById("heroLayer");
@@ -27,6 +28,16 @@
 
   function lerp(a, b, t) {
     return a + (b - a) * t;
+  }
+
+  // Amarra visualmente a trilha ao texto: a marcação fica exatamente no
+  // ponto em que a frase termina de abrir (TEXT_COMPLETE_VALUE), não no
+  // meio do curso do puxador.
+  function positionRailMark() {
+    if (!dragRailMark) return;
+    var railTravel = Math.max(railTrack.clientHeight - dragHandle.offsetHeight, 0);
+    var centerY = (TEXT_COMPLETE_VALUE / 100) * railTravel + dragHandle.offsetHeight / 2;
+    dragRailMark.style.top = centerY + "px";
   }
 
   var revealed = false;
@@ -81,6 +92,7 @@
     dragHandle.style.transform = "translateY(" + frac * railTravel + "px)";
 
     if (dragHint) dragHint.style.opacity = frac > 0.05 ? 0 : 1;
+    if (dragRailMark) dragRailMark.classList.toggle("is-reached", value >= TEXT_COMPLETE_VALUE);
 
     if (!revealed && !revealing && value >= TRIGGER_VALUE) {
       triggerReveal();
@@ -158,6 +170,8 @@
     });
   }
 
+  positionRailMark();
+  window.addEventListener("resize", positionRailMark);
   applyValue(0);
 
   var yearEl = document.getElementById("year");
