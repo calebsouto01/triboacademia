@@ -15,6 +15,7 @@
   var railTrack = document.querySelector(".drag-rail");
   var dragHandle = document.getElementById("dragHandle");
   var dragHandleRingFill = document.getElementById("dragHandleRingFill");
+  var dragRailFill = document.getElementById("dragRailFill");
   var dragRailMark = document.getElementById("dragRailMark");
   var dragHint = document.getElementById("dragHint");
   var dragHintLabel = document.getElementById("dragHintLabel");
@@ -143,6 +144,13 @@
     var railTravel = Math.max(railTrack.clientHeight - dragHandle.offsetHeight, 0);
     dragHandle.style.transform = "translateY(" + (value / 100) * railTravel + "px)";
 
+    // O preenchimento dourado da trilha sobe até acompanhar exatamente o
+    // centro do puxador — distância física percorrida, não reseta por
+    // etapa (diferente do anel, que é progresso de cada perna da puxada).
+    if (dragRailFill) {
+      dragRailFill.style.height = (value / 100) * railTravel + dragHandle.offsetHeight / 2 + "px";
+    }
+
     if (dragRailMark) dragRailMark.classList.toggle("is-reached", value >= CHECKPOINT_VALUE);
 
     if (!checkpointReached && value >= CHECKPOINT_VALUE) {
@@ -183,6 +191,7 @@
     cableText.style.transition = "transform " + easing + ", letter-spacing " + easing + ", filter " + easing + ", opacity " + easing;
     dragHandle.style.transition = "transform " + easing;
     if (dragHandleRingFill) dragHandleRingFill.style.transition = "stroke-dashoffset " + easing;
+    if (dragRailFill) dragRailFill.style.transition = "height " + easing;
     applyValue(0);
     if (dragHint) dragHint.style.opacity = 1;
     scrambleLabel("Puxe");
@@ -190,6 +199,7 @@
       cableText.style.transition = "";
       dragHandle.style.transition = "";
       if (dragHandleRingFill) dragHandleRingFill.style.transition = "";
+      if (dragRailFill) dragRailFill.style.transition = "";
     }, 400);
   }
 
@@ -202,6 +212,7 @@
     dragHandle.style.transition = "transform " + easing;
     if (heroLayer) heroLayer.style.transition = "clip-path " + easing;
     if (dragHandleRingFill) dragHandleRingFill.style.transition = "stroke-dashoffset " + easing;
+    if (dragRailFill) dragRailFill.style.transition = "height " + easing;
     applyValue(CHECKPOINT_VALUE);
     if (dragHint) dragHint.style.opacity = 1;
     scrambleLabel("Puxe de novo");
@@ -209,6 +220,7 @@
       dragHandle.style.transition = "";
       if (heroLayer) heroLayer.style.transition = "";
       if (dragHandleRingFill) dragHandleRingFill.style.transition = "";
+      if (dragRailFill) dragRailFill.style.transition = "";
     }, 400);
   }
 
@@ -251,6 +263,7 @@
     cableText.style.transition = "";
     dragHandle.style.transition = "";
     if (dragHandleRingFill) dragHandleRingFill.style.transition = "";
+    if (dragRailFill) dragRailFill.style.transition = "";
     if (heroLayer) heroLayer.style.transition = "none"; // raspagem ao vivo, sem lag de transition
     if (dragHint) dragHint.style.opacity = 0;
     if (scrambleStop) scrambleStop();

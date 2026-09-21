@@ -197,6 +197,23 @@ a {
   margin: 0 auto 10px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.12);
+  overflow: visible;
+}
+
+/* O dourado do anel do puxador "sobe" pela trilha inteira também — como
+   um cabo acendendo conforme é puxado, não só um detalhe isolado na
+   bolinha. Acompanha a posição real do puxador (não reseta por etapa,
+   ao contrário do anel: aqui é a distância física percorrida). */
+.drag-rail-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 0;
+  border-radius: 2px;
+  background: var(--color-gold);
+  box-shadow: 0 0 10px rgba(242, 194, 0, 0.65), 0 0 22px rgba(242, 194, 0, 0.3);
+  pointer-events: none;
 }
 
 /* O puxador vira um disco com anel de progresso em volta — não mais uma
