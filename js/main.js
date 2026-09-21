@@ -127,7 +127,7 @@
 
     var scaleY = lerp(2.4, 1, textFrac);
     var scaleX = lerp(0.4, 1, textFrac);
-    var tracking = lerp(-6, 0.5, textFrac);
+    var tracking = lerp(-6, -1, textFrac);
     var blur = lerp(2, 0, textFrac);
     var opacity = lerp(0.3, 1, textFrac);
     cableText.style.transform = "scale(" + scaleX + ", " + scaleY + ")";
