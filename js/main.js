@@ -525,3 +525,43 @@
     hintObserver.observe(plansEl);
   }
 })();
+
+// Scrollspy: destaca no cabeçalho o link correspondente à seção que está
+// na tela no momento. Cada seção é observada com uma faixa de detecção
+// fina perto do meio da viewport — a mesma técnica usada em "Nosso Time"
+// e Horários pra saber "onde" o usuário está, só que aqui é binário
+// (dentro/fora), não uma fração de progresso.
+(function () {
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav a[href^='#']"));
+  if (navLinks.length === 0 || !("IntersectionObserver" in window)) return;
+
+  var linkByTarget = {};
+  var sections = [];
+  navLinks.forEach(function (link) {
+    var id = link.getAttribute("href").slice(1);
+    var section = document.getElementById(id);
+    if (!section) return;
+    linkByTarget[id] = link;
+    sections.push(section);
+  });
+  if (sections.length === 0) return;
+
+  function setActive(id) {
+    navLinks.forEach(function (link) {
+      link.classList.toggle("is-active", linkByTarget[id] === link);
+    });
+  }
+
+  var observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+  );
+
+  sections.forEach(function (section) {
+    observer.observe(section);
+  });
+})();
