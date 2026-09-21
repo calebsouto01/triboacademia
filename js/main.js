@@ -1,22 +1,21 @@
-// Intro: o usuário PUXA a barra triangular (mouse ou toque) pra levantar o
-// peso, como numa máquina de cabo de verdade. Nada mais depende de scroll —
-// o gesto é discreto e controlado pelo próprio usuário, então não tem como
-// "vencer" a leitura rolando rápido: ele só avança quando decide puxar.
+// Intro: a própria frase de resultado nasce comprimida/ilegível e só se
+// estica em texto limpo conforme o usuário arrasta a alça abaixo dela —
+// a copy É o mecanismo, não um comentário sobre ele. Nada de academia
+// visível ainda; a marca só aparece no corte de cena, como resposta.
+// Tudo controlado por gesto (Pointer Events, mouse e toque), não por
+// scroll — não tem como "vencer" a leitura rolando rápido.
 (function () {
-  var weight = document.getElementById("pulley-weight");
-  var track = document.querySelector(".pulley-track");
-  var scaleIndicator = document.getElementById("pulleyScaleIndicator");
-  var pullTrack = document.getElementById("pullTrack");
-  var pullBar = document.getElementById("pullBar");
-  var pullCable = document.getElementById("pullCable");
-  var pullLabel = document.getElementById("pullLabel");
+  var cableText = document.getElementById("introCableText");
+  var railTrack = document.querySelector(".drag-rail");
+  var dragHandle = document.getElementById("dragHandle");
+  var dragHint = document.getElementById("dragHint");
   var introLayer = document.getElementById("introLayer");
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
   var header = document.querySelector(".header");
   var skipIntro = document.getElementById("skipIntro");
 
-  if (!weight || !track || !pullTrack || !pullBar) return;
+  if (!cableText || !railTrack || !dragHandle) return;
 
   var TRIGGER_VALUE = 45; // cruzou isso na escala 0-100, o corte de cena dispara sozinho
   var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
@@ -25,10 +24,14 @@
     return Math.max(min, Math.min(max, v));
   }
 
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
   var revealed = false;
   var revealing = false;
   var dragging = false;
-  var value = 0; // 0-100, posição atual na "escala de carga"
+  var value = 0; // 0-100
   var startY = 0;
   var startValue = 0;
 
@@ -50,56 +53,51 @@
     window.removeEventListener("touchmove", preventScroll, { passive: false });
   }
 
-  // A página fica travada até o usuário puxar a barra (ou pular a intro) —
-  // sem isso, dava pra rolar direto pro site sem o cabeçalho/whatsapp
+  // A página fica travada até o usuário puxar (ou pular a intro) — sem
+  // isso, dava pra rolar direto pro site sem o cabeçalho/whatsapp
   // aparecerem (eles só ligam depois do corte de cena).
   lockScroll();
-
-  var BAR_TOP = 14; // deve bater com o "top" do .pull-bar no CSS
-  var CABLE_REACH = 10; // um pouco além do topo da barra, alcançando o anel do puxador
 
   function applyValue(v) {
     value = clamp(v, 0, 100);
     var frac = value / 100;
 
-    var weightTravel = Math.max(track.clientHeight - weight.offsetHeight - 28, 0);
-    weight.style.transform = "translate(-50%, " + -(frac * weightTravel) + "px)";
+    var scaleY = lerp(2.4, 1, frac);
+    var scaleX = lerp(0.4, 1, frac);
+    var tracking = lerp(-6, 0.5, frac);
+    var blur = lerp(2, 0, frac);
+    var opacity = lerp(0.3, 1, frac);
+    cableText.style.transform = "scale(" + scaleX + ", " + scaleY + ")";
+    cableText.style.letterSpacing = tracking + "px";
+    cableText.style.filter = "blur(" + blur + "px)";
+    cableText.style.opacity = opacity;
 
-    var barTravel = Math.max(pullTrack.clientHeight - pullBar.offsetHeight - 20, 0);
-    var barY = frac * barTravel;
-    pullBar.style.transform = "translate(-50%, " + barY + "px)";
+    var railTravel = Math.max(railTrack.clientHeight - dragHandle.offsetHeight, 0);
+    dragHandle.style.transform = "translateY(" + frac * railTravel + "px)";
 
-    if (scaleIndicator) scaleIndicator.style.bottom = frac * 100 + "%";
-    if (pullCable) {
-      // Em repouso não existe cabo visível — ele "estica" a partir do topo
-      // do trilho conforme a barra é puxada pra baixo.
-      pullCable.style.height = frac > 0 ? BAR_TOP + barY + CABLE_REACH + "px" : "0";
-      pullCable.style.setProperty("--tension", frac);
-    }
-    if (pullLabel) pullLabel.style.opacity = frac > 0.05 ? 0 : 1;
+    if (dragHint) dragHint.style.opacity = frac > 0.05 ? 0 : 1;
 
     if (!revealed && !revealing && value >= TRIGGER_VALUE) {
       triggerReveal();
     }
   }
 
-  // Soltou antes de puxar o suficiente: o cabo "recolhe" o peso de volta,
-  // convidando a puxar de novo.
+  // Soltou antes de puxar o suficiente: tudo volta ao início, convidando a
+  // puxar de novo.
   function snapBack() {
-    pullBar.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
-    weight.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
-    if (pullCable) pullCable.style.transition = "height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+    var easing = "0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+    cableText.style.transition = "transform " + easing + ", letter-spacing " + easing + ", filter " + easing + ", opacity " + easing;
+    dragHandle.style.transition = "transform " + easing;
     applyValue(0);
     window.setTimeout(function () {
-      pullBar.style.transition = "";
-      weight.style.transition = "";
-      if (pullCable) pullCable.style.transition = "";
+      cableText.style.transition = "";
+      dragHandle.style.transition = "";
     }, 400);
   }
 
   // Corte de cena único: uma máscara circular (clip-path direto no
   // heroLayer) se expande a partir do centro, como um portal se abrindo,
-  // revelando a hero por trás da intro.
+  // revelando a hero — e a marca — por trás da intro.
   function triggerReveal() {
     if (revealed || revealing) return;
     revealing = true;
@@ -124,16 +122,16 @@
     dragging = true;
     startY = ev.clientY;
     startValue = value;
-    pullBar.style.transition = "";
-    weight.style.transition = "";
-    if (pullBar.setPointerCapture) pullBar.setPointerCapture(ev.pointerId);
+    cableText.style.transition = "";
+    dragHandle.style.transition = "";
+    if (dragHandle.setPointerCapture) dragHandle.setPointerCapture(ev.pointerId);
     ev.preventDefault();
   }
 
   function onPointerMove(ev) {
     if (!dragging) return;
-    var barTravel = Math.max(pullTrack.clientHeight - pullBar.offsetHeight - 20, 0);
-    var deltaValue = barTravel > 0 ? ((ev.clientY - startY) / barTravel) * 100 : 0;
+    var railTravel = Math.max(railTrack.clientHeight - dragHandle.offsetHeight, 0);
+    var deltaValue = railTravel > 0 ? ((ev.clientY - startY) / railTravel) * 100 : 0;
     applyValue(startValue + deltaValue);
   }
 
@@ -143,10 +141,10 @@
     if (!revealed && !revealing) snapBack();
   }
 
-  pullBar.addEventListener("pointerdown", onPointerDown);
-  pullBar.addEventListener("pointermove", onPointerMove);
-  pullBar.addEventListener("pointerup", onPointerUp);
-  pullBar.addEventListener("pointercancel", onPointerUp);
+  dragHandle.addEventListener("pointerdown", onPointerDown);
+  dragHandle.addEventListener("pointermove", onPointerMove);
+  dragHandle.addEventListener("pointerup", onPointerUp);
+  dragHandle.addEventListener("pointercancel", onPointerUp);
 
   if (skipIntro) {
     skipIntro.addEventListener("click", function (ev) {

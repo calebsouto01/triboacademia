@@ -31,73 +31,22 @@
   <section id="intro-hero" class="intro-hero">
     <div class="intro-hero-sticky">
 
-      <!-- Camada 1: intro (puxar a barra levanta o peso, num aparelho de verdade) -->
+      <!-- Camada 1: intro (a frase de resultado nasce comprimida e só se
+           estica em texto legível conforme o usuário puxa — nada de
+           academia visível ainda; a marca só aparece no corte de cena) -->
       <div class="intro-layer" id="introLayer">
         <div class="intro-bg" aria-hidden="true"></div>
         <a href="#" id="skipIntro" class="skip-intro">Pular introdução</a>
 
         <div class="intro-content">
-          <img src="assets/images/logo.png" alt="Tribo Academia" class="intro-logo" />
+          <p class="intro-cable-text" id="introCableText">
+            Você fez seu primeiro movimento rumo aos resultados!
+          </p>
 
-          <div class="machine-frame">
-            <div class="machine-top-bar" aria-hidden="true">
-              <div class="machine-pulley-wheel"></div>
-            </div>
-
-            <div class="machine-rig-row">
-              <div class="pulley">
-                <div class="pulley-track">
-                  <div class="pulley-cable"></div>
-                  <div id="pulley-weight" class="pulley-weight" aria-hidden="true">
-                    <span class="plate"></span>
-                    <span class="plate"></span>
-                    <span class="plate"></span>
-                    <span class="plate"></span>
-                    <span class="plate plate-labeled">55</span>
-                  </div>
-                </div>
-                <div class="pulley-scale" aria-hidden="true">
-                  <span>100</span>
-                  <span>75</span>
-                  <span>50</span>
-                  <span>25</span>
-                  <span>0</span>
-                  <div class="pulley-scale-indicator" id="pulleyScaleIndicator"></div>
-                </div>
-              </div>
-
-              <div class="pull-rig">
-                <div class="pull-track" id="pullTrack">
-                  <div class="pull-cable" id="pullCable"></div>
-                  <div class="pull-bar" id="pullBar">
-                    <svg viewBox="0 0 60 56" class="pull-bar-svg" aria-hidden="true">
-                      <ellipse cx="30" cy="8" rx="7" ry="8" fill="none" stroke="#d4d4d4" stroke-width="4" />
-                      <path d="M14 48 L14 20 A16 15 0 0 1 46 20 L46 48" fill="none" stroke="url(#pullArchGradient)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
-                      <rect x="9" y="40" width="42" height="14" rx="7" fill="url(#pullGripGradient)" stroke="#5a5a5a" stroke-width="1" />
-                      <defs>
-                        <linearGradient id="pullArchGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0" stop-color="#5a5a5a" />
-                          <stop offset="0.5" stop-color="#333333" />
-                          <stop offset="1" stop-color="#5a5a5a" />
-                        </linearGradient>
-                        <linearGradient id="pullGripGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0" stop-color="#eaeaea" />
-                          <stop offset="0.5" stop-color="#8a8a8a" />
-                          <stop offset="1" stop-color="#d8d8d8" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                  </div>
-                  <p class="pull-label" id="pullLabel">
-                    Puxe
-                    <span class="pull-arrows" aria-hidden="true"><span>&#8964;</span><span>&#8964;</span></span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="machine-base" aria-hidden="true"></div>
+          <div class="drag-rail">
+            <div class="drag-handle" id="dragHandle"></div>
           </div>
+          <p class="drag-hint" id="dragHint">Arraste <span aria-hidden="true">&#8964;</span></p>
         </div>
       </div>
 
@@ -109,7 +58,8 @@
         </div>
         <div class="container hero-inner">
           <div class="hero-content">
-            <h1>Você fez seu primeiro movimento rumo aos resultados!</h1>
+            <p class="hero-kicker">Essa foi sua primeira repetição.</p>
+            <h1>A Tribo Academia é o resto da série.</h1>
             <p>Estrutura completa, treinos para todos os níveis e uma equipe pronta pra te levar mais longe.</p>
             <a href="#localizacao" class="btn btn-primary">Comece agora</a>
           </div>
