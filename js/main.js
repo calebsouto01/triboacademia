@@ -17,7 +17,8 @@
 
   if (!cableText || !railTrack || !dragHandle) return;
 
-  var TRIGGER_VALUE = 45; // cruzou isso na escala 0-100, o corte de cena dispara sozinho
+  var TEXT_COMPLETE_VALUE = 30; // o texto termina de esticar (fica 100% legível) aqui
+  var TRIGGER_VALUE = 45; // só depois disso o corte de cena dispara — dá uma folga pra ler o texto já pronto antes de cortar
   var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
 
   function clamp(v, min, max) {
@@ -61,12 +62,16 @@
   function applyValue(v) {
     value = clamp(v, 0, 100);
     var frac = value / 100;
+    // O texto usa sua própria fração, que chega em 1 (totalmente esticado
+    // e legível) bem antes do gatilho do corte de cena — assim ele nunca é
+    // interrompido no meio do esticamento.
+    var textFrac = clamp(value / TEXT_COMPLETE_VALUE, 0, 1);
 
-    var scaleY = lerp(2.4, 1, frac);
-    var scaleX = lerp(0.4, 1, frac);
-    var tracking = lerp(-6, 0.5, frac);
-    var blur = lerp(2, 0, frac);
-    var opacity = lerp(0.3, 1, frac);
+    var scaleY = lerp(2.4, 1, textFrac);
+    var scaleX = lerp(0.4, 1, textFrac);
+    var tracking = lerp(-6, 0.5, textFrac);
+    var blur = lerp(2, 0, textFrac);
+    var opacity = lerp(0.3, 1, textFrac);
     cableText.style.transform = "scale(" + scaleX + ", " + scaleY + ")";
     cableText.style.letterSpacing = tracking + "px";
     cableText.style.filter = "blur(" + blur + "px)";
