@@ -624,7 +624,7 @@ a {
   display: flex;
   width: max-content;
   gap: 16px;
-  animation: gallery-scroll 24s linear infinite;
+  animation: gallery-scroll 46s linear infinite;
 }
 
 .gallery-viewport:hover .gallery {
