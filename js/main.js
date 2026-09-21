@@ -18,8 +18,8 @@
 
   if (!cableText || !railTrack || !dragHandle) return;
 
-  var TEXT_COMPLETE_VALUE = 30; // o texto termina de esticar (fica 100% legível) aqui
-  var TRIGGER_VALUE = 45; // só depois disso o corte de cena dispara — dá uma folga pra ler o texto já pronto antes de cortar
+  var TEXT_COMPLETE_VALUE = 50; // o texto termina de esticar (fica 100% legível) aqui — cai exatamente na metade da trilha
+  var TRIGGER_VALUE = 65; // só depois disso o corte de cena dispara — dá uma folga pra ler o texto já pronto antes de cortar
   var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
 
   function clamp(v, min, max) {
