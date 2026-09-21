@@ -247,13 +247,15 @@ a {
   touch-action: none;
 }
 
+/* Sobe até a borda do trilho, encostando na barra superior do aparelho —
+   lê como se o cabo realmente continuasse até a roldana da máquina. */
 .pulley-cable {
   position: absolute;
-  top: 10px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 4px;
-  height: calc(100% - 20px);
+  height: calc(100% - 12px);
   background: #5a5a5a;
   border-radius: 4px;
 }
@@ -317,20 +319,20 @@ a {
 
 .pull-rig {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
   flex-shrink: 0;
 }
 
+/* Sem linha em repouso — o cabo só existe (e estica) enquanto o usuário
+   puxa a barra, crescendo a partir do topo do trilho (JS controla a
+   `height`, aqui só o visual/tensão). */
 .pull-cable {
   --tension: 0;
   position: absolute;
-  top: 10px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 5px;
-  height: calc(100% - 20px);
+  height: 0;
   border-radius: 4px;
   background: linear-gradient(180deg, #c4c4c4, #6e6e6e 45%, #c4c4c4 55%, #8a8a8a);
   box-shadow: 0 0 calc(3px + var(--tension) * 14px) rgba(255, 255, 255, calc(0.2 + var(--tension) * 0.6));
@@ -361,13 +363,23 @@ a {
   pointer-events: none;
 }
 
+/* Encostado na barra: fica logo abaixo do puxador, dentro do próprio
+   trilho, em vez de solto embaixo de toda a coluna. */
 .pull-label {
+  position: absolute;
+  left: 50%;
+  top: 76px;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 12px;
   font-weight: 700;
   color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  text-align: center;
+  transition: opacity 0.25s ease;
 }
 
 .pull-arrows {
@@ -417,6 +429,11 @@ a {
   .pull-bar {
     width: 50px;
     height: 48px;
+  }
+
+  .pull-label {
+    top: 68px;
+    font-size: 11px;
   }
 }
 

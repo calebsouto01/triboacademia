@@ -9,6 +9,7 @@
   var pullTrack = document.getElementById("pullTrack");
   var pullBar = document.getElementById("pullBar");
   var pullCable = document.getElementById("pullCable");
+  var pullLabel = document.getElementById("pullLabel");
   var introLayer = document.getElementById("introLayer");
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
@@ -54,6 +55,9 @@
   // aparecerem (eles só ligam depois do corte de cena).
   lockScroll();
 
+  var BAR_TOP = 14; // deve bater com o "top" do .pull-bar no CSS
+  var CABLE_REACH = 10; // um pouco além do topo da barra, alcançando o anel do puxador
+
   function applyValue(v) {
     value = clamp(v, 0, 100);
     var frac = value / 100;
@@ -62,10 +66,17 @@
     weight.style.transform = "translate(-50%, " + -(frac * weightTravel) + "px)";
 
     var barTravel = Math.max(pullTrack.clientHeight - pullBar.offsetHeight - 20, 0);
-    pullBar.style.transform = "translate(-50%, " + frac * barTravel + "px)";
+    var barY = frac * barTravel;
+    pullBar.style.transform = "translate(-50%, " + barY + "px)";
 
     if (scaleIndicator) scaleIndicator.style.bottom = frac * 100 + "%";
-    if (pullCable) pullCable.style.setProperty("--tension", frac);
+    if (pullCable) {
+      // Em repouso não existe cabo visível — ele "estica" a partir do topo
+      // do trilho conforme a barra é puxada pra baixo.
+      pullCable.style.height = frac > 0 ? BAR_TOP + barY + CABLE_REACH + "px" : "0";
+      pullCable.style.setProperty("--tension", frac);
+    }
+    if (pullLabel) pullLabel.style.opacity = frac > 0.05 ? 0 : 1;
 
     if (!revealed && !revealing && value >= TRIGGER_VALUE) {
       triggerReveal();
@@ -77,10 +88,12 @@
   function snapBack() {
     pullBar.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
     weight.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+    if (pullCable) pullCable.style.transition = "height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
     applyValue(0);
     window.setTimeout(function () {
       pullBar.style.transition = "";
       weight.style.transition = "";
+      if (pullCable) pullCable.style.transition = "";
     }, 400);
   }
 
