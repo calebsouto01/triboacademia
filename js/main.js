@@ -9,15 +9,55 @@
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
 
-  // Fração do scroll da seção dedicada a cada fase (seção agora é mais alta,
-  // então o peso continua subindo rápido em pixels, e sobra bastante scroll
-  // para uma transição lenta e suave até a hero).
   var INTRO_END = 0.18; // peso termina de subir aqui (rápido)
-  var CROSS_START = 0.24; // hero começa a aparecer, depois da mensagem de sucesso
-  var CROSS_END = 0.75; // transição longa e suave até a hero assentar
+  var REVEAL_TRIGGER = 0.35; // depois da mensagem de sucesso, dispara o corte de cena
+  var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
+  }
+
+  var revealed = false;
+  var revealing = false;
+
+  function preventScroll(ev) {
+    ev.preventDefault();
+  }
+
+  function lockScroll() {
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("touchmove", preventScroll, { passive: false });
+  }
+
+  function unlockScroll() {
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+    window.removeEventListener("wheel", preventScroll, { passive: false });
+    window.removeEventListener("touchmove", preventScroll, { passive: false });
+  }
+
+  // Fase 2: corte de cena único — não é mais proporcional ao scroll pixel a
+  // pixel. Ao cruzar o gatilho, uma máscara circular (aplicada via
+  // clip-path direto no heroLayer) se expande sozinha a partir do centro,
+  // como um portal se abrindo, revelando a hero por trás da intro.
+  function triggerReveal() {
+    if (revealed || revealing) return;
+    revealing = true;
+    lockScroll();
+
+    if (introLayer) introLayer.style.pointerEvents = "none";
+    if (heroLayer) {
+      heroLayer.classList.add("is-revealed");
+      heroLayer.style.pointerEvents = "auto";
+    }
+
+    window.setTimeout(function () {
+      revealed = true;
+      revealing = false;
+      unlockScroll();
+    }, REVEAL_DURATION);
   }
 
   var ticking = false;
@@ -30,7 +70,7 @@
     var scrollable = section.offsetHeight - window.innerHeight;
     var progress = scrollable > 0 ? clamp(-rect.top / scrollable, 0, 1) : 1;
 
-    // Fase 1: peso sobe rápido.
+    // Fase 1: peso sobe rápido, mensagem de sucesso aparece — sem mudanças.
     var introProgress = clamp(progress / INTRO_END, 0, 1);
     var travel = Math.max(track.clientHeight - weight.offsetHeight - 28, 0);
     weight.style.transform = "translate(-50%, " + -(introProgress * travel) + "px)";
@@ -39,28 +79,12 @@
     if (introArrow) introArrow.style.opacity = introProgress > 0.4 ? 0 : 1;
     if (successMsg) successMsg.classList.toggle("is-visible", introProgress > 0.75);
 
-    // Fase 2: transição (crossfade) da intro para a hero, como uma sessão única.
-    var crossProgress = clamp((progress - CROSS_START) / (CROSS_END - CROSS_START), 0, 1);
-
-    // Suavização (ease-in-out) para o movimento não parecer linear/mecânico.
-    var eased = crossProgress * crossProgress * (3 - 2 * crossProgress);
-
-    if (introLayer) {
-      introLayer.style.opacity = 1 - eased;
-      introLayer.style.transform =
-        "translateY(" + -(eased * 50) + "px) scale(" + (1 - eased * 0.08) + ")";
-      introLayer.style.pointerEvents = eased > 0.9 ? "none" : "auto";
+    if (!revealed && !revealing && progress > REVEAL_TRIGGER) {
+      triggerReveal();
     }
 
-    if (heroLayer) {
-      heroLayer.style.opacity = eased;
-      heroLayer.style.transform =
-        "translateY(" + ((1 - eased) * 50) + "px) scale(" + (0.94 + eased * 0.06) + ")";
-      heroLayer.style.pointerEvents = eased > 0.1 ? "auto" : "none";
-    }
-
-    // O restante do site só aparece (fica acessível) após a hero terminar de aparecer.
-    if (whatsappFloat) whatsappFloat.hidden = progress < 0.97;
+    // O restante do site só aparece (fica acessível) depois do corte de cena.
+    if (whatsappFloat) whatsappFloat.hidden = !revealed;
   }
 
   function requestUpdate() {
@@ -76,108 +100,6 @@
 
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
-})();
-
-// Partículas que fogem do mouse na hero: decoração sutil sobre o banner,
-// pausada via IntersectionObserver quando a hero sai da tela (economia de CPU).
-(function () {
-  var canvas = document.getElementById("heroParticles");
-  if (!canvas) return;
-
-  var ctx = canvas.getContext("2d");
-  var section = document.getElementById("intro-hero");
-  var points = [];
-  var mouse = { x: -999, y: -999 };
-  var raf = null;
-  var running = false;
-
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  function clamp(v, min, max) {
-    return Math.max(min, Math.min(max, v));
-  }
-
-  function measure() {
-    var rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    points = [];
-    var gap = 44;
-    for (var y = gap / 2; y < canvas.height; y += gap) {
-      for (var x = gap / 2; x < canvas.width; x += gap) {
-        points.push({ ox: x, oy: y, x: x, y: y });
-      }
-    }
-  }
-
-  function onMove(ev) {
-    var rect = canvas.getBoundingClientRect();
-    mouse.x = ev.clientX - rect.left;
-    mouse.y = ev.clientY - rect.top;
-  }
-
-  function onLeave() {
-    mouse.x = mouse.y = -999;
-  }
-
-  function draw() {
-    if (!running) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    points.forEach(function (p) {
-      var dx = p.x - mouse.x;
-      var dy = p.y - mouse.y;
-      var d = Math.hypot(dx, dy);
-
-      if (d < 80 && d > 0) {
-        var f = (80 - d) / 80;
-        p.x += (dx / d) * f * 7;
-        p.y += (dy / d) * f * 7;
-      }
-
-      p.x = lerp(p.x, p.ox, 0.08);
-      p.y = lerp(p.y, p.oy, 0.08);
-
-      var brilho = clamp(1 - Math.hypot(p.x - p.ox, p.y - p.oy) / 30, 0.25, 1);
-      ctx.fillStyle = "rgba(255, 255, 255, " + (brilho * 0.7).toFixed(2) + ")";
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    raf = requestAnimationFrame(draw);
-  }
-
-  function start() {
-    if (running) return;
-    running = true;
-    raf = requestAnimationFrame(draw);
-  }
-
-  function stop() {
-    running = false;
-    if (raf) cancelAnimationFrame(raf);
-  }
-
-  measure();
-  window.addEventListener("resize", measure);
-  window.addEventListener("mousemove", onMove, { passive: true });
-  window.addEventListener("mouseleave", onLeave);
-
-  if (section && "IntersectionObserver" in window) {
-    var observer = new IntersectionObserver(
-      function (entries) {
-        if (entries[0].isIntersecting) start();
-        else stop();
-      },
-      { threshold: 0 }
-    );
-    observer.observe(section);
-  } else {
-    start();
-  }
 })();
 
 // Seção "Nosso Time": cartões que empilham na rolagem normal da página.
@@ -233,4 +155,61 @@
     requestUpdate();
   });
   update();
+})();
+
+// Revela ao rolar: fade + leve translateY pra seções que hoje aparecem
+// estáticas (Sobre, Horários, Localização), dando movimento consistente
+// com o resto do site sem uma animação diferente por seção.
+(function () {
+  var elements = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  if (elements.length === 0) return;
+
+  if (!("IntersectionObserver" in window)) {
+    elements.forEach(function (el) {
+      el.classList.add("is-visible");
+    });
+    return;
+  }
+
+  var observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  elements.forEach(function (el) {
+    observer.observe(el);
+  });
+})();
+
+// Planos: painéis que expandem. Clique alterna qual painel fica aberto;
+// em dispositivos com mouse, passar por cima também abre (hover-intent).
+(function () {
+  var panels = Array.prototype.slice.call(document.querySelectorAll(".plan-panel"));
+  if (panels.length === 0) return;
+
+  var hasHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
+
+  function openPanel(target) {
+    panels.forEach(function (p) {
+      p.classList.toggle("is-open", p === target);
+    });
+  }
+
+  panels.forEach(function (panel) {
+    panel.addEventListener("click", function () {
+      openPanel(panel);
+    });
+    if (hasHover) {
+      panel.addEventListener("mouseenter", function () {
+        openPanel(panel);
+      });
+    }
+  });
 })();

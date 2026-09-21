@@ -9,6 +9,21 @@
 </head>
 <body>
 
+  <!-- Cabeçalho flutuante: fixo desde o primeiro frame, sobreposto ao banner -->
+  <header class="header">
+    <div class="container header-inner">
+      <img src="assets/images/logo.png" alt="Tribo Academia" class="header-logo" />
+      <nav class="nav">
+        <a href="#sobre">Sobre</a>
+        <a href="#equipe">Equipe</a>
+        <a href="#horarios">Horários</a>
+        <a href="#localizacao">Localização</a>
+        <a href="#planos">Planos</a>
+      </nav>
+      <a href="#localizacao" class="btn btn-primary nav-cta">Matricule-se</a>
+    </div>
+  </header>
+
   <!-- ===================== INTRO + HERO (SESSÃO ÚNICA, ANIMAÇÃO POR SCROLL) ===================== -->
   <section id="intro-hero" class="intro-hero">
     <div class="intro-hero-sticky">
@@ -45,7 +60,6 @@
           <img src="assets/images/hero-banner.jpg" alt="" />
           <div class="hero-banner-overlay"></div>
         </div>
-        <canvas class="hero-particles" id="heroParticles" aria-hidden="true"></canvas>
         <div class="container hero-inner">
           <div class="hero-content">
             <h1>Sua jornada começa com um movimento.</h1>
@@ -61,24 +75,9 @@
   <!-- ===================== SITE PRINCIPAL (só aparece depois da hero) ===================== -->
   <div id="site" class="site">
 
-    <!-- Header -->
-    <header class="header">
-      <div class="container header-inner">
-        <img src="assets/images/logo.png" alt="Tribo Academia" class="header-logo" />
-        <nav class="nav">
-          <a href="#sobre">Sobre</a>
-          <a href="#equipe">Equipe</a>
-          <a href="#horarios">Horários</a>
-          <a href="#localizacao">Localização</a>
-          <a href="#planos">Planos</a>
-        </nav>
-        <a href="#localizacao" class="btn btn-primary nav-cta">Matricule-se</a>
-      </div>
-    </header>
-
     <!-- Sobre -->
     <section id="sobre" class="section">
-      <div class="container">
+      <div class="container reveal">
         <h2>Sobre a Tribo Academia</h2>
         <p>
           Somos mais que uma academia: somos uma tribo. Estrutura completa e moderna,
@@ -160,71 +159,47 @@
 
     <!-- Horários -->
     <section id="horarios" class="section">
-      <div class="container">
+      <div class="container reveal">
         <h2>Horários de Aulas</h2>
         <p class="section-note">*Grade de exemplo — confirme os horários reais das aulas coletivas na recepção.</p>
-        <div class="table-wrap">
-          <table class="schedule">
-            <thead>
-              <tr>
-                <th>Modalidade</th>
-                <th>Segunda</th>
-                <th>Terça</th>
-                <th>Quarta</th>
-                <th>Quinta</th>
-                <th>Sexta</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Musculação</td>
-                <td>06h–22h</td>
-                <td>06h–22h</td>
-                <td>06h–22h</td>
-                <td>06h–22h</td>
-                <td>06h–22h</td>
-              </tr>
-              <tr>
-                <td>Funcional</td>
-                <td>07h, 19h</td>
-                <td>—</td>
-                <td>07h, 19h</td>
-                <td>—</td>
-                <td>07h, 19h</td>
-              </tr>
-              <tr>
-                <td>G.A.P</td>
-                <td>—</td>
-                <td>18h</td>
-                <td>—</td>
-                <td>18h</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td>Ritbox</td>
-                <td>19h</td>
-                <td>—</td>
-                <td>19h</td>
-                <td>—</td>
-                <td>19h</td>
-              </tr>
-              <tr>
-                <td>Dança</td>
-                <td>—</td>
-                <td>20h</td>
-                <td>—</td>
-                <td>20h</td>
-                <td>—</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="horarios-gallery">
+          <div class="horario-card">
+            <div class="horario-photo">[FOTO DE MUSCULAÇÃO]</div>
+            <h3>Musculação</h3>
+            <p class="horario-days">Segunda a sexta</p>
+            <p class="horario-times">06h – 22h</p>
+          </div>
+          <div class="horario-card">
+            <div class="horario-photo">[FOTO DE FUNCIONAL]</div>
+            <h3>Funcional</h3>
+            <p class="horario-days">Segunda, quarta e sexta</p>
+            <p class="horario-times">07h e 19h</p>
+          </div>
+          <div class="horario-card">
+            <div class="horario-photo">[FOTO DE G.A.P]</div>
+            <h3>G.A.P</h3>
+            <p class="horario-days">Terça e quinta</p>
+            <p class="horario-times">18h</p>
+          </div>
+          <div class="horario-card">
+            <div class="horario-photo">[FOTO DE RITBOX]</div>
+            <h3>Ritbox</h3>
+            <p class="horario-days">Segunda, quarta e sexta</p>
+            <p class="horario-times">19h</p>
+          </div>
+          <div class="horario-card">
+            <div class="horario-photo">[FOTO DE DANÇA]</div>
+            <h3>Dança</h3>
+            <p class="horario-days">Terça e quinta</p>
+            <p class="horario-times">20h</p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Localização -->
     <section id="localizacao" class="section section-alt">
-      <div class="container localizacao-grid">
+      <div class="container localizacao-grid reveal">
         <div class="localizacao-info">
           <h2>Onde Estamos</h2>
           <p>Endereço: Rua Quito, 248 — próximo ao UNEX</p>
@@ -256,23 +231,35 @@
         <h2>Conheça Nossos Planos</h2>
         <p class="section-hashtag">#VEM PARA TRIBO</p>
         <div class="plans">
-          <div class="plan-card">
-            <h3>6x na semana</h3>
-            <p class="plan-price">R$ 85<span>/mês</span></p>
+          <div class="plan-panel">
+            <span class="plan-panel-label">6x na semana</span>
+            <div class="plan-panel-details">
+              <h3>6x na semana</h3>
+              <p class="plan-price">R$ 85<span>/mês</span></p>
+            </div>
           </div>
-          <div class="plan-card">
-            <h3>3x na semana</h3>
-            <p class="plan-price">R$ 75<span>/mês</span></p>
+          <div class="plan-panel">
+            <span class="plan-panel-label">3x na semana</span>
+            <div class="plan-panel-details">
+              <h3>3x na semana</h3>
+              <p class="plan-price">R$ 75<span>/mês</span></p>
+            </div>
           </div>
-          <div class="plan-card plan-card-highlight">
-            <h3>Plano Família</h3>
-            <p class="plan-price">R$ 80<span>/mês</span></p>
-            <p class="plan-note">A partir de 2 pessoas</p>
+          <div class="plan-panel is-open">
+            <span class="plan-panel-label">Plano Família</span>
+            <div class="plan-panel-details">
+              <h3>Plano Família</h3>
+              <p class="plan-price">R$ 80<span>/mês</span></p>
+              <p class="plan-note">A partir de 2 pessoas</p>
+            </div>
           </div>
-          <div class="plan-card">
-            <h3>Horário Promocional</h3>
-            <p class="plan-price">R$ 65<span>/mês</span></p>
-            <p class="plan-note">Consultar horários</p>
+          <div class="plan-panel">
+            <span class="plan-panel-label">Horário Promocional</span>
+            <div class="plan-panel-details">
+              <h3>Horário Promocional</h3>
+              <p class="plan-price">R$ 65<span>/mês</span></p>
+              <p class="plan-note">Consultar horários</p>
+            </div>
           </div>
         </div>
         <p class="section-note">Aulas coletivas inclusas: G.A.P, Ritbox, Dança, Funcional.</p>
