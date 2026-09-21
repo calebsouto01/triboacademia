@@ -415,8 +415,18 @@
 
   var panDistance = 0;
 
+  // O cálculo antigo (scrollWidth - innerWidth) ignorava a margem
+  // esquerda do container (centralizado, com padding) onde a faixa
+  // começa — a distância real de arraste é maior que isso, faltava
+  // exatamente essa margem. Sem ela, a seção destravava antes do último
+  // card entrar inteiro na tela. Mede a posição real da faixa (com
+  // transform zerado) pra pegar a distância certa.
   function recalc() {
-    panDistance = Math.max(track.scrollWidth - window.innerWidth, 0);
+    var prevTransform = track.style.transform;
+    track.style.transform = "translateX(0px)";
+    var trackLeft = track.getBoundingClientRect().left;
+    panDistance = Math.max(trackLeft + track.scrollWidth - window.innerWidth, 0);
+    track.style.transform = prevTransform;
     section.style.height = panDistance + window.innerHeight + "px";
   }
 
