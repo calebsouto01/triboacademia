@@ -135,7 +135,9 @@
     var scale = lerp(0.86, 1, textFrac);
     var tracking = lerp(-3, -1, textFrac);
     var blur = lerp(8, 0, textFrac);
-    var opacity = lerp(0.4, 1, textFrac);
+    // Começa totalmente invisível (não só embaçado) — a trilha aparece
+    // sozinha, sem sombra nenhuma do texto por trás, até o usuário puxar.
+    var opacity = lerp(0, 1, textFrac);
     cableText.style.transform = "scale(" + scale + ")";
     cableText.style.letterSpacing = tracking + "px";
     cableText.style.filter = "blur(" + blur + "px)";
@@ -144,11 +146,14 @@
     var railTravel = Math.max(railTrack.clientHeight - dragHandle.offsetHeight, 0);
     dragHandle.style.transform = "translateY(" + (value / 100) * railTravel + "px)";
 
-    // O preenchimento dourado da trilha sobe até acompanhar exatamente o
-    // centro do puxador — distância física percorrida, não reseta por
-    // etapa (diferente do anel, que é progresso de cada perna da puxada).
+    // O preenchimento dourado da trilha sobe até acompanhar o topo do
+    // puxador — distância física percorrida, não reseta por etapa
+    // (diferente do anel, que é progresso de cada perna da puxada). Em
+    // repouso (value 0) fica em 0 — sem isso, um deslocamento fixo pra
+    // alcançar o centro do puxador deixava um resquício do brilho
+    // dourado visível mesmo parado.
     if (dragRailFill) {
-      dragRailFill.style.height = (value / 100) * railTravel + dragHandle.offsetHeight / 2 + "px";
+      dragRailFill.style.height = (value / 100) * railTravel + "px";
     }
 
     if (dragRailMark) dragRailMark.classList.toggle("is-reached", value >= CHECKPOINT_VALUE);
