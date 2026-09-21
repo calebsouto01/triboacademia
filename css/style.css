@@ -537,20 +537,45 @@ a {
   text-align: center;
 }
 
-.gallery {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+/* Galeria em rolamento automático: os itens aparecem duas vezes seguidas
+   no HTML e a faixa anda -50% em loop — como são idênticos, a costura é
+   invisível e o loop nunca "pula". Pausa no hover pra quem quiser olhar
+   uma foto com calma. */
+.gallery-viewport {
   margin-top: 24px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
 }
 
-@media (min-width: 700px) {
+.gallery {
+  display: flex;
+  width: max-content;
+  gap: 16px;
+  animation: gallery-scroll 24s linear infinite;
+}
+
+.gallery-viewport:hover .gallery {
+  animation-play-state: paused;
+}
+
+@keyframes gallery-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 8px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .gallery {
-    grid-template-columns: repeat(3, 1fr);
+    animation: none;
   }
 }
 
 .gallery-item {
+  flex: 0 0 clamp(220px, 32vw, 320px);
   aspect-ratio: 4 / 3;
   background: var(--color-bg-alt);
   border: 1px dashed #c9c9c9;
