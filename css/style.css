@@ -470,6 +470,21 @@ a {
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* Em telas estreitas o "cover" ancorado à esquerda só sobra a área escura
+   reservada pro texto — o atleta da foto some do corte inteiro. Desloca o
+   enquadramento pra mostrar ele e troca o degradê lateral (que dependia
+   de sobrar largura) por uma máscara uniforme, já que aqui o texto ocupa
+   quase toda a largura por cima da foto de qualquer forma. */
+@media (max-width: 640px) {
+  .hero-banner-bg img {
+    object-position: 70% center;
+  }
+
+  .hero-banner-overlay {
+    background: linear-gradient(180deg, rgba(8, 8, 8, 0.55) 0%, rgba(8, 8, 8, 0.4) 40%, rgba(8, 8, 8, 0.72) 100%);
+  }
+}
+
 .section {
   padding: 70px 0;
 }
