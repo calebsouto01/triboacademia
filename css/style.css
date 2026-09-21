@@ -93,7 +93,7 @@ a {
 
 .intro-hero {
   position: relative;
-  height: 180vh;
+  height: 240vh;
 }
 
 .intro-hero-sticky {
@@ -152,7 +152,7 @@ a {
 .intro-content {
   text-align: center;
   padding: 20px;
-  max-width: 420px;
+  max-width: min(680px, 92vw);
 }
 
 .intro-logo {
@@ -163,23 +163,57 @@ a {
 }
 
 .intro-step {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+  font-size: 1.4rem;
+  font-weight: 700;
   margin-bottom: 30px;
   color: var(--color-text);
   transition: opacity 0.3s ease;
 }
 
-.intro-step-cursor {
+/* Peso + frase de impacto lado a lado: o resultado ganha o protagonismo
+   visual, não o indicativo de rolagem. */
+.intro-motion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  text-align: left;
+}
+
+.pulley {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.intro-impact {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0.2px;
+  margin: 0;
+  max-width: 360px;
+  color: var(--color-gold-dark);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.intro-impact.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.intro-impact-cursor {
   display: inline-block;
-  width: 3px;
-  height: 1em;
+  width: 4px;
+  height: 0.85em;
   margin-left: 3px;
   background: var(--color-gold-dark);
-  vertical-align: -0.15em;
+  vertical-align: -0.1em;
   animation: blink-cursor 0.9s steps(1) infinite;
 }
 
@@ -188,26 +222,16 @@ a {
   50%, 100% { opacity: 0; }
 }
 
-.intro-success {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--color-gold-dark);
-  margin-top: 30px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
+@media (max-width: 700px) {
+  .intro-motion {
+    flex-direction: column;
+    text-align: center;
+  }
 
-.intro-success.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.pulley {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  .intro-impact {
+    max-width: 320px;
+    text-align: center;
+  }
 }
 
 .pulley-track {

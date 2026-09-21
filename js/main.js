@@ -3,18 +3,24 @@
   var track = document.querySelector(".pulley-track");
   var weight = document.getElementById("pulley-weight");
   var introLayer = document.getElementById("introLayer");
-  var introStep = document.getElementById("introStep");
-  var introStepText = introStep ? introStep.querySelector(".intro-step-text") : null;
-  var introStepFullText = introStep ? introStep.getAttribute("data-text") || "" : "";
-  var introStepShown = -1;
+  var introStep = document.querySelector(".intro-step");
   var introArrow = document.querySelector(".pulley-arrow");
-  var successMsg = document.getElementById("intro-success");
+  var introImpact = document.getElementById("introImpact");
+  var introImpactText = introImpact ? introImpact.querySelector(".intro-impact-text") : null;
+  var introImpactFullText = introImpact ? introImpact.getAttribute("data-text") || "" : "";
+  var introImpactShown = -1;
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
   var header = document.querySelector(".header");
 
-  var INTRO_END = 0.18; // peso termina de subir aqui (rápido)
-  var REVEAL_TRIGGER = 0.35; // depois da mensagem de sucesso, dispara o corte de cena
+  // Fases pensadas como o tempo de um leitor executando o movimento: o peso
+  // sobe devagar o bastante pra sentir o esforço, a frase de impacto digita
+  // no próprio ritmo da leitura, e ainda sobra um respiro antes do corte de
+  // cena — nada acontece rápido demais pra não dar tempo de perceber.
+  var INTRO_END = 0.3; // peso termina de subir aqui
+  var IMPACT_START = INTRO_END; // frase de impacto começa a aparecer/digitar quando o peso chega ao topo
+  var IMPACT_TYPE_END = 0.6; // frase totalmente digitada aqui
+  var REVEAL_TRIGGER = 0.85; // respiro pra ler a frase pronta antes do corte de cena disparar
   var REVEAL_DURATION = 650; // ms — deve bater com a transition de .hero-layer.is-revealed no CSS
 
   function clamp(value, min, max) {
@@ -74,25 +80,28 @@
     var scrollable = section.offsetHeight - window.innerHeight;
     var progress = scrollable > 0 ? clamp(-rect.top / scrollable, 0, 1) : 1;
 
-    // Fase 1: peso sobe rápido, mensagem de sucesso aparece — sem mudanças.
+    // Fase 1: peso sobe — o indicativo "role para baixo" só acompanha em
+    // opacidade, sem efeito especial (o destaque agora é da frase de impacto).
     var introProgress = clamp(progress / INTRO_END, 0, 1);
     var travel = Math.max(track.clientHeight - weight.offsetHeight - 28, 0);
     weight.style.transform = "translate(-50%, " + -(introProgress * travel) + "px)";
 
-    // Texto em efeito de máquina de escrever: acompanha o peso subindo,
-    // revelando uma letra por vez até ~metade do trajeto.
-    if (introStepText && introStepFullText) {
-      var typeProgress = clamp(introProgress / 0.5, 0, 1);
-      var charsShown = Math.round(typeProgress * introStepFullText.length);
-      if (charsShown !== introStepShown) {
-        introStepShown = charsShown;
-        introStepText.textContent = introStepFullText.slice(0, charsShown);
-      }
-    }
-
     if (introStep) introStep.style.opacity = introProgress > 0.6 ? 0 : 1;
     if (introArrow) introArrow.style.opacity = introProgress > 0.4 ? 0 : 1;
-    if (successMsg) successMsg.classList.toggle("is-visible", introProgress > 0.75);
+
+    // Fase 2: frase de impacto em máquina de escrever, ao lado do peso —
+    // começa a digitar assim que o peso chega ao topo e tem um trecho
+    // inteiro de scroll só pra digitação + outro só pra leitura (dwell)
+    // antes do corte de cena dar sequência.
+    if (introImpact) introImpact.classList.toggle("is-visible", progress > IMPACT_START);
+    if (introImpactText && introImpactFullText) {
+      var impactProgress = clamp((progress - IMPACT_START) / (IMPACT_TYPE_END - IMPACT_START), 0, 1);
+      var charsShown = Math.round(impactProgress * introImpactFullText.length);
+      if (charsShown !== introImpactShown) {
+        introImpactShown = charsShown;
+        introImpactText.textContent = introImpactFullText.slice(0, charsShown);
+      }
+    }
 
     if (!revealed && !revealing && progress > REVEAL_TRIGGER) {
       triggerReveal();
