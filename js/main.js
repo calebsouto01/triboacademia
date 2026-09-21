@@ -19,7 +19,6 @@
   var dragHintLabel = document.getElementById("dragHintLabel");
   var introLayer = document.getElementById("introLayer");
   var heroLayer = document.getElementById("heroLayer");
-  var whatsappFloat = document.getElementById("whatsapp-float");
   var header = document.querySelector(".header");
   var skipIntro = document.getElementById("skipIntro");
 
@@ -209,7 +208,6 @@
       revealed = true;
       revealing = false;
       unlockScroll();
-      if (whatsappFloat) whatsappFloat.hidden = false;
       if (header) header.classList.add("is-visible");
       if (heroLayer) {
         heroLayer.style.transition = "";
@@ -272,6 +270,35 @@
 
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
+
+// Botão flutuante do WhatsApp: só aparece depois que o usuário rola pra
+// além da hero — logo depois do corte de cena a tela já tem o CTA da
+// hero ("Comece agora"); mostrar o WhatsApp junto empilhava 2 chamadas
+// na mesma primeira tela.
+(function () {
+  var whatsappFloat = document.getElementById("whatsapp-float");
+  var sobre = document.getElementById("sobre");
+  if (!whatsappFloat || !sobre) return;
+
+  if (!("IntersectionObserver" in window)) {
+    whatsappFloat.hidden = false;
+    return;
+  }
+
+  var observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          whatsappFloat.hidden = false;
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0, rootMargin: "0px 0px -60% 0px" }
+  );
+
+  observer.observe(sobre);
 })();
 
 // Seção "Nosso Time": cartões que empilham na rolagem normal da página.

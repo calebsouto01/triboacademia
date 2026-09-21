@@ -371,10 +371,18 @@ a {
   gap: 16px;
 }
 
-.header-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.header-brand {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header-brand span {
+  color: var(--color-gold-dark);
 }
 
 .nav {
@@ -410,13 +418,22 @@ a {
 }
 
 .nav-cta {
+  display: none;
   padding: 10px 20px;
   font-size: 0.9rem;
 }
 
+/* No mobile, a hero já tem o CTA principal ("Comece agora") logo abaixo —
+   repetir "Matricule-se" no cabeçalho, junto com o WhatsApp flutuante,
+   empilhava 3 chamadas na mesma tela. Mantém só a marca no cabeçalho até
+   a tela ter espaço de sobra pro CTA duplicado não incomodar. */
 @media (min-width: 768px) {
   .nav {
     display: flex;
+  }
+
+  .nav-cta {
+    display: inline-block;
   }
 }
 
