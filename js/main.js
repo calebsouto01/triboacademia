@@ -8,6 +8,7 @@
   var successMsg = document.getElementById("intro-success");
   var heroLayer = document.getElementById("heroLayer");
   var whatsappFloat = document.getElementById("whatsapp-float");
+  var header = document.querySelector(".header");
 
   var INTRO_END = 0.18; // peso termina de subir aqui (rápido)
   var REVEAL_TRIGGER = 0.35; // depois da mensagem de sucesso, dispara o corte de cena
@@ -83,8 +84,9 @@
       triggerReveal();
     }
 
-    // O restante do site só aparece (fica acessível) depois do corte de cena.
+    // Cabeçalho e WhatsApp só aparecem depois do corte de cena da intro.
     if (whatsappFloat) whatsappFloat.hidden = !revealed;
+    if (header) header.classList.toggle("is-visible", revealed);
   }
 
   function requestUpdate() {
