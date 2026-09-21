@@ -124,12 +124,16 @@
     // depois, então ele já está pronto quando a 1ª puxada trava.
     var textFrac = clamp(value / CHECKPOINT_VALUE, 0, 1);
 
-    var scaleY = lerp(2.4, 1, textFrac);
-    var scaleX = lerp(0.4, 1, textFrac);
-    var tracking = lerp(-6, -1, textFrac);
-    var blur = lerp(2, 0, textFrac);
-    var opacity = lerp(0.3, 1, textFrac);
-    cableText.style.transform = "scale(" + scaleX + ", " + scaleY + ")";
+    // Escala uniforme (não mais scaleX/scaleY diferentes) — a versão
+    // anterior espremia a largura e esticava a altura ao mesmo tempo, o
+    // que distorcia as letras a ponto de ficar ilegível/feio. Agora o
+    // texto só cresce proporcionalmente enquanto sai do desfoque, sem
+    // deformar a fonte.
+    var scale = lerp(0.86, 1, textFrac);
+    var tracking = lerp(-3, -1, textFrac);
+    var blur = lerp(8, 0, textFrac);
+    var opacity = lerp(0.4, 1, textFrac);
+    cableText.style.transform = "scale(" + scale + ")";
     cableText.style.letterSpacing = tracking + "px";
     cableText.style.filter = "blur(" + blur + "px)";
     cableText.style.opacity = opacity;
