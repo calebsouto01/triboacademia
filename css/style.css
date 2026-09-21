@@ -199,16 +199,18 @@ a {
   background: rgba(255, 255, 255, 0.12);
 }
 
+/* O puxador vira um disco com anel de progresso em volta — não mais uma
+   bolinha lisa. O anel se preenche em dourado conforme avança na etapa
+   atual (reseta ao virar de página, do checkpoint pra 2ª puxada), e o
+   disco central ganha um "rebaixo" no meio pra parecer mais peça de
+   aparelho do que ícone de UI genérico. */
 .drag-handle {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 34px;
-  height: 34px;
-  margin-left: -17px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ffffff, #cfcfcf 55%, #9a9a9a);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
   cursor: grab;
   touch-action: none;
   will-change: transform;
@@ -217,6 +219,48 @@ a {
 
 .drag-handle:active {
   cursor: grabbing;
+}
+
+.drag-handle-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.drag-handle-ring-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 2.5;
+}
+
+.drag-handle-ring-fill {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 113.097;
+  stroke-dashoffset: 113.097;
+  filter: drop-shadow(0 0 4px rgba(242, 194, 0, 0.6));
+}
+
+.drag-handle-core {
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #ffffff, #d6d6d6 55%, #949494 100%);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+.drag-handle-core::after {
+  content: "";
+  position: absolute;
+  inset: 32%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 /* Marcação fixa na trilha: o ponto exato em que a primeira puxada trava —
@@ -320,9 +364,9 @@ a {
   }
 
   .drag-handle {
-    width: 30px;
-    height: 30px;
-    margin-left: -15px;
+    width: 38px;
+    height: 38px;
+    margin-left: -19px;
   }
 }
 

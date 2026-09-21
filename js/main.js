@@ -14,6 +14,7 @@
   var cableText = document.getElementById("introCableText");
   var railTrack = document.querySelector(".drag-rail");
   var dragHandle = document.getElementById("dragHandle");
+  var dragHandleRingFill = document.getElementById("dragHandleRingFill");
   var dragRailMark = document.getElementById("dragRailMark");
   var dragHint = document.getElementById("dragHint");
   var dragHintLabel = document.getElementById("dragHintLabel");
@@ -28,6 +29,7 @@
   var TRIGGER_VALUE = 95; // 2ª puxada precisa chegar perto do fim da barra pra o corte se consumar sozinho
   var REVEAL_DURATION = 650; // ms — duração do corte quando ele se completa sozinho (bate com a transition padrão do CSS)
   var HERO_CLIP_MAX = 150; // % — mesmo valor usado em .hero-layer.is-revealed no CSS
+  var RING_CIRCUMFERENCE = 2 * Math.PI * 18; // deve bater com o r="18" do círculo no SVG
 
   function clamp(v, min, max) {
     return Math.max(min, Math.min(max, v));
@@ -147,11 +149,25 @@
       checkpointReached = true;
     }
 
+    // Fração da 2ª puxada (checkpoint até o fim) — 0 até o valor realmente
+    // passar do checkpoint, só então cresce. Usada tanto pra raspar o
+    // corte de cena quanto, junto com textFrac, pro anel de progresso.
+    var stage2Frac = clamp((value - CHECKPOINT_VALUE) / (100 - CHECKPOINT_VALUE), 0, 1);
+
+    // Anel de progresso no puxador: mostra o avanço dentro da etapa atual
+    // — enche na 1ª puxada (0 até o checkpoint), segura cheio exatamente
+    // no checkpoint, e só reseta pra encher de novo quando o valor passa
+    // dele de verdade (2ª puxada) — sem o "pulo" de esvaziar no instante
+    // exato em que a 1ª puxada é concluída.
+    if (dragHandleRingFill) {
+      var ringFrac = value <= CHECKPOINT_VALUE ? textFrac : stage2Frac;
+      dragHandleRingFill.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - ringFrac);
+    }
+
     // 2ª puxada: o corte de cena é raspado ao vivo pela posição do
     // puxador, não por uma animação de duração fixa — a transição
     // acontece junto com o movimento, não depois dele.
     if (checkpointReached && !revealed && !revealing && heroLayer) {
-      var stage2Frac = clamp((value - CHECKPOINT_VALUE) / (100 - CHECKPOINT_VALUE), 0, 1);
       heroLayer.style.clipPath = "circle(" + stage2Frac * HERO_CLIP_MAX + "% at 50% 50%)";
     }
 
@@ -166,12 +182,14 @@
     var easing = "0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
     cableText.style.transition = "transform " + easing + ", letter-spacing " + easing + ", filter " + easing + ", opacity " + easing;
     dragHandle.style.transition = "transform " + easing;
+    if (dragHandleRingFill) dragHandleRingFill.style.transition = "stroke-dashoffset " + easing;
     applyValue(0);
     if (dragHint) dragHint.style.opacity = 1;
     scrambleLabel("Puxe");
     window.setTimeout(function () {
       cableText.style.transition = "";
       dragHandle.style.transition = "";
+      if (dragHandleRingFill) dragHandleRingFill.style.transition = "";
     }, 400);
   }
 
@@ -183,12 +201,14 @@
     var easing = "0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
     dragHandle.style.transition = "transform " + easing;
     if (heroLayer) heroLayer.style.transition = "clip-path " + easing;
+    if (dragHandleRingFill) dragHandleRingFill.style.transition = "stroke-dashoffset " + easing;
     applyValue(CHECKPOINT_VALUE);
     if (dragHint) dragHint.style.opacity = 1;
     scrambleLabel("Puxe de novo");
     window.setTimeout(function () {
       dragHandle.style.transition = "";
       if (heroLayer) heroLayer.style.transition = "";
+      if (dragHandleRingFill) dragHandleRingFill.style.transition = "";
     }, 400);
   }
 
@@ -230,6 +250,7 @@
     dragCap = checkpointReached ? 100 : CHECKPOINT_VALUE;
     cableText.style.transition = "";
     dragHandle.style.transition = "";
+    if (dragHandleRingFill) dragHandleRingFill.style.transition = "";
     if (heroLayer) heroLayer.style.transition = "none"; // raspagem ao vivo, sem lag de transition
     if (dragHint) dragHint.style.opacity = 0;
     if (scrambleStop) scrambleStop();

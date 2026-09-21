@@ -48,7 +48,13 @@
               <span class="drag-rail-mark-plate drag-rail-mark-plate-left"></span>
               <span class="drag-rail-mark-plate drag-rail-mark-plate-right"></span>
             </div>
-            <div class="drag-handle" id="dragHandle"></div>
+            <div class="drag-handle" id="dragHandle">
+              <svg class="drag-handle-ring" viewBox="0 0 44 44" aria-hidden="true">
+                <circle class="drag-handle-ring-track" cx="22" cy="22" r="18" />
+                <circle class="drag-handle-ring-fill" id="dragHandleRingFill" cx="22" cy="22" r="18" />
+              </svg>
+              <span class="drag-handle-core"></span>
+            </div>
           </div>
           <p class="drag-hint" id="dragHint">
             <span class="drag-hint-label" id="dragHintLabel">Puxe</span>
